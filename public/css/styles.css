@@ -1,0 +1,6 @@
+label.error {
+    color: red;
+    display: block;
+    width: 100%;
+    padding-top: 0.5rem;
+  }
