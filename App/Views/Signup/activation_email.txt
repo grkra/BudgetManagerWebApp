@@ -1,0 +1,5 @@
+Aktywacja konta
+
+Dziękujemy za rejestrację konta. W celu aktywacji konta proszę kliknąć w link:
+
+{{url}}
