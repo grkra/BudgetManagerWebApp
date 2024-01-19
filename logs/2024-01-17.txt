@@ -1,4 +1,0 @@
-[17-Jan-2024 21:41:25 Europe/Berlin] Uncaught exception: 'Exception' with message 'No route matched.'
-Stack trace: #0 D:\gitrepo\budget_manager_web_app\BudgetManagerWebApp\public\index.php(39): Core\Router->dispatch('aaa')
-#1 {main}
-Thrown in 'D:\gitrepo\budget_manager_web_app\BudgetManagerWebApp\Core\Router.php' on line 122
