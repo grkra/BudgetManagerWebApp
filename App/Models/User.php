@@ -7,9 +7,11 @@ use App\Token;
 use Core\View;
 use PDO;
 
+
 /**
  * User model
  */
+#[\AllowDynamicProperties]
 class User extends \Core\Model
 {
 

@@ -9,6 +9,7 @@ use PDO;
  * Remembered login model
  * 
  */
+#[\AllowDynamicProperties]
 class RememberedLogin extends \Core\Model
 {
     /**
@@ -49,7 +50,7 @@ class RememberedLogin extends \Core\Model
      */
     public function hasExpired()
     {
-        return strtotime($this->expires_at) < time();
+        return strtotime($this->expiriation) < time();
     }
 
     /**
