@@ -57,6 +57,9 @@ class View
 
             $twig->addGlobal('current_user', \App\Auth::getUser());
             $twig->addGlobal('flash_messages', \App\Flash::getMessages());
+            $twig->addGlobal('income_categories', \App\Models\IncomeCategory::findByUserID(\App\Auth::getUser()->user_id ?? null));
+            $twig->addGlobal('payment_methods', \App\Models\PaymentMethod::findByUserID(\App\Auth::getUser()->user_id ?? null));
+            $twig->addGlobal('payment_categories', \App\Models\PaymentCategory::findByUserID(\App\Auth::getUser()->user_id ?? null));
         }
 
         return $twig->render($template, $args);

@@ -46,9 +46,11 @@ class User extends \Core\Model
 
         if (empty($this->errors)) {
             $password_hash = password_hash($this->password, PASSWORD_DEFAULT);
+
             $token = new Token();
             $hashed_token = $token->getHash();
             $this->activation_token = $token->getValue();
+
             $sql = 'INSERT INTO users (name, email, password_hash, activation_hash) VALUES (:name, :email, :password_hash, :activation_hash)';
             $db = static::getDB();
             $stmt = $db->prepare($sql);
@@ -77,7 +79,7 @@ class User extends \Core\Model
         if (filter_var($this->email, FILTER_VALIDATE_EMAIL) === false) {
             $this->errors[] = 'Błędny adres email';
         }
-        if (static::emailExists($this->email, $this->id ?? null)) {
+        if (static::emailExists($this->email, $this->user_id ?? null)) {
             $this->errors[] = 'Istnieje już konto dla podanego adresu email';
         }
 
@@ -107,7 +109,7 @@ class User extends \Core\Model
     {
         $user = static::findByEmail($email);
         if ($user) {
-            if ($user->id != $ignore_id) {
+            if ($user->user_id != $ignore_id) {
                 return true;
             }
         }
@@ -153,6 +155,7 @@ class User extends \Core\Model
      */
     public static function authenticate($email, $password)
     {
+
         $user = static::findByEmail($email);
         if ($user && $user->is_active) {
             if (password_verify($password, $user->password_hash)) {
@@ -169,12 +172,12 @@ class User extends \Core\Model
      *
      * @return mixed User object if found, false otherwise
      */
-    public static function findByID($id)
+    public static function findByID($user_id)
     {
-        $sql = 'SELECT * FROM users WHERE id = :id';
+        $sql = 'SELECT * FROM users WHERE user_id = :user_id';
         $db = static::getDB();
         $stmt = $db->prepare($sql);
-        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
         $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
         $stmt->execute();
         return $stmt->fetch();
@@ -196,7 +199,7 @@ class User extends \Core\Model
         $db = static::getDB();
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':token_hash', $hashed_token, PDO::PARAM_STR);
-        $stmt->bindValue(':user_id', $this->id, PDO::PARAM_INT);
+        $stmt->bindValue(':user_id', $this->user_id, PDO::PARAM_INT);
         $stmt->bindValue(':expiriation', date('Y-m-d H:i:s', $this->expiry_timestamp), PDO::PARAM_STR);
         return $stmt->execute();
     }
@@ -219,6 +222,32 @@ class User extends \Core\Model
         $db = static::getDB();
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':hashed_token', $hashed_token, PDO::PARAM_STR);
+        $stmt->execute();
+    }
+
+    /**
+     * Add default income categories, payment categories and payment methods by copying from income_categories_default, payment_categories_default, payment_methods_default tables
+     * @return void
+     */
+    public function addDefaultIncomePaymentCategories()
+    {
+        $sql = 'INSERT INTO income_categories (category, user_id)
+                SELECT income_categories_default.category, users.user_id
+                FROM income_categories_default, users
+                WHERE users.email = :email;
+
+                INSERT INTO payment_categories (category, user_id)
+                SELECT payment_categories_default.category, users.user_id
+                FROM payment_categories_default, users
+                WHERE users.email = :email;
+
+                INSERT INTO payment_methods (method, user_id)
+                SELECT payment_methods_default.method, users.user_id
+                FROM payment_methods_default, users
+                WHERE users.email = :email;';
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':email', $this->email, PDO::PARAM_STR);
         $stmt->execute();
     }
 }

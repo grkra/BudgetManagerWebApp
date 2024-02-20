@@ -28,8 +28,8 @@ $router = new Core\Router();
 
 // Add the routes
 $router->add('', ['controller' => 'Home', 'action' => 'new']);
-$router->add('income', ['controller' => 'Income', 'action' => 'new']);
-$router->add('expense', ['controller' => 'Expense', 'action' => 'new']);
+$router->add('add-income', ['controller' => 'AddIncome', 'action' => 'new']);
+$router->add('add-expense', ['controller' => 'AddExpense', 'action' => 'new']);
 $router->add('balance', ['controller' => 'Balance', 'action' => 'new']);
 $router->add('properties', ['controller' => 'Properties', 'action' => 'new']);
 $router->add('login', ['controller' => 'Login', 'action' => 'new']);
