@@ -4,3 +4,7 @@ label.error {
     width: 100%;
     padding-top: 0.5rem;
   }
+
+fieldset label.error {
+		display: none;
+	}

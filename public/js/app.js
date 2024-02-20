@@ -19,3 +19,5 @@ $.validator.addMethod('validPassword',
     },
     'Hasło musi mieć min. 1 literę i min. 1 cyfrę.'
 );
+
+
