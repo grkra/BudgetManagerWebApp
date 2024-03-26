@@ -8,3 +8,8 @@ label.error {
 fieldset label.error {
 		display: none;
 	}
+
+.chartBox {
+  width: 350px;
+  padding: 0px;
+}

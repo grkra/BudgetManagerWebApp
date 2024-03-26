@@ -17,7 +17,10 @@ class PaymentCategory extends \Core\Model
 
     public static function findByUserID($userID)
     {
-        $sql = 'SELECT * FROM payment_categories WHERE user_id = :user_id';
+        $sql = 'SELECT * FROM payment_categories 
+        WHERE user_id = :user_id
+        ORDER BY category';
+
         $db = static::getDB();
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':user_id', $userID, PDO::PARAM_INT);

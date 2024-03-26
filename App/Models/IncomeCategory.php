@@ -17,7 +17,10 @@ class IncomeCategory extends \Core\Model
 
     public static function findByUserID($userID = null)
     {
-        $sql = 'SELECT * FROM income_categories WHERE user_id = :user_id';
+        $sql = 'SELECT * FROM income_categories 
+        WHERE user_id = :user_id
+        ORDER BY category';
+
         $db = static::getDB();
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':user_id', $userID, PDO::PARAM_INT);

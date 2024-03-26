@@ -66,8 +66,8 @@ class Income extends \Core\Model
         if ($this->value == '') {
             $this->errors[] = 'Wartość jest wymagana.';
         }
-        if ($this->value < 0) {
-            $this->errors[] = 'Wartość nie może być mniejsza od 0';
+        if ($this->value <= 0) {
+            $this->errors[] = 'Wartość musi być większa od 0';
         }
         if ($this->date == '') {
             $this->errors[] = 'Data jest wymagana.';
@@ -75,5 +75,56 @@ class Income extends \Core\Model
         if (!isset($this->category)) {
             $this->errors[] = 'Kategoria jest wymagana.';
         }
+    }
+
+    /**
+     * Find all incomes by user ID
+     * 
+     * @param int $user_id  ID of logged in user
+     * 
+     * @return mixed  An array with all incomes of the user or null if there are no incomes
+     */
+    public static function findIncomesByUserID($user_id = 0)
+    {
+        $sql = 'SELECT incomes.income_id, incomes.value, incomes.date, income_categories.category, incomes.comment
+        FROM incomes
+        INNER JOIN income_categories
+        ON incomes.category_id = income_categories.category_id
+        WHERE incomes.user_id = :user_id
+        ORDER BY income_categories.category, 
+        incomes.date DESC';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * Find total value of incomes of each category by user ID
+     * 
+     * @param int $user_id  ID of logged in user
+     * 
+     * @return mixed  An array with total values (sums) of all incomes of the user for each category or null if there are no incomes
+     */
+    public static function findSumsOfEachCategoryByUserID($user_id = 0)
+    {
+        $sql = 'SELECT income_categories.category, 
+                sum(incomes.value) AS "sum"
+                FROM incomes
+                LEFT OUTER JOIN income_categories
+                ON incomes.category_id = income_categories.category_id
+                WHERE incomes.user_id = :user_id
+                GROUP BY income_categories.category
+                ORDER BY sum DESC';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $stmt->execute();
+        return $stmt->fetchAll();
     }
 }
