@@ -13,3 +13,19 @@ fieldset label.error {
   width: 350px;
   padding: 0px;
 }
+
+svg.red {
+  fill: red;
+}
+
+.pointer {
+  cursor: pointer
+}
+
+tr.income:hover, tr.expense:hover {
+  font-weight: bold;
+}
+
+svg.rotated {
+  transform: rotate(180deg);
+}

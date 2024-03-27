@@ -9,6 +9,7 @@ Bilans
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 <script src="https://unpkg.com/chart.js-plugin-labels-dv/dist/chartjs-plugin-labels.min.js"></script>
 <script src="/js/pieChart.js"></script>
+<script src="/js/balance.js"></script>
 {% endblock %}
 
 
@@ -33,10 +34,10 @@ Bilans
       <div class="container">
         <div class="row row-cols-2">
           <div class="col chartBox">
-            <canvas id="incomesChart"></canvas>
+            <canvas class="pointer" id="incomesChart"></canvas>
           </div>
           <div class="col chartBox">
-            <canvas id="expensesChart"></canvas>
+            <canvas class="pointer" id="expensesChart"></canvas>
           </div>
         </div>
       </div>
@@ -53,21 +54,22 @@ Bilans
         </thead>
 
         <tbody class="table-group-divider">
-          </tr>
           {% set total_income = 0.0 %}
+          {% set category_id = 0 %}
           {% for income_category in income_categories_totals %}
           {% set total_income = total_income + income_category.sum %}
-          <tr class="income">
-            <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                class="bi bi-chevron-down" viewBox="0 0 16 16">
+          {% set category_id = category_id + 1 %}
+          <tr class="income pointer" id="income-{{category_id}}">
+            <td>{{income_category.category}}<svg class="bi bi-chevron-down mx-1" xmlns="http://www.w3.org/2000/svg"
+                width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                 <path fill-rule="evenodd"
                   d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
-              </svg>{{income_category.category}}</td>
+              </svg>
+            </td>
             <td>{{income_category.sum|number_format(2, '.', '')}}</td>
           </tr>
 
-          <!-- <tr class="d-none"> -->
-          <tr>
+          <tr class="d-none" id="income-{{category_id}}-details">
             <td colspan="2">
               <table class="table mb-0 border border-black">
                 <thead>
@@ -118,22 +120,23 @@ Bilans
 
         <tbody class="table-group-divider">
           {% set total_expense = 0.0 %}
+          {% set category_id = 0 %}
           {% for expense_category in expense_categories_totals %}
           {% set total_expense = total_expense + expense_category.sum %}
-          <tr class="expense">
+          {% set category_id = category_id + 1 %}
+          <tr class="expense pointer" id="expense-{{category_id}}">
             <td>
+              {{ expense_category.category }}
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                class="bi bi-chevron-down" viewBox="0 0 16 16">
+                class="bi bi-chevron-down mx-1" viewBox="0 0 16 16">
                 <path fill-rule="evenodd"
                   d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
               </svg>
-              {{ expense_category.category }}
             </td>
             <td>{{ expense_category.sum|number_format(2, '.', '') }}</td>
           </tr>
 
-          <!-- <tr class="d-none"> -->
-          <tr>
+          <tr class="d-none" id="expense-{{category_id}}-details">
             <td colspan="2">
               <table class="table mb-0 border border-black">
                 <thead>
