@@ -3,12 +3,12 @@ const ctx = document.getElementById('balanceChart');
 const incomes = Array.from($(".income"));
 const incomesValues = incomes.map(row => Number(row.lastElementChild.innerText));
 const incomesLabels = incomes.map(row => row.firstElementChild.innerText);
-const incomesTotal = incomesValues.reduce((accumulator, currentValue) => accumulator + currentValue);
+const incomesTotal = incomesValues.reduce((accumulator, currentValue) => { return accumulator + currentValue }, 0);
 
 const expenses = Array.from($(".expense"));
 const expensesValues = expenses.map(row => Number(row.lastElementChild.innerText));
 const expensesLabels = expenses.map(row => row.firstElementChild.innerText);
-const expensesTotal = expensesValues.reduce((accumulator, currentValue) => accumulator + currentValue)
+const expensesTotal = expensesValues.reduce((accumulator, currentValue) => { return accumulator + currentValue }, 0);
 
 const maxTotal = Math.max(incomesTotal, expensesTotal);
 
@@ -283,7 +283,7 @@ const configExpenses = {
 }
 
 // CHARTS
-const incomeChart = new Chart(
+const incomeChart = incomesTotal > 0 && new Chart(
     document.getElementById('incomesChart'), configIncomes);
-const expenseChart = new Chart(
+const expenseChart = expensesTotal > 0 && new Chart(
     document.getElementById('expensesChart'), configExpenses);

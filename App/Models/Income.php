@@ -127,4 +127,65 @@ class Income extends \Core\Model
         $stmt->execute();
         return $stmt->fetchAll();
     }
+
+    /**
+     * Find incomes by user ID, start date and end date
+     * 
+     * @param int $user_id ID of logged in user
+     * @param string $start_date start date of wanted incomes
+     * @param string $end_date end date of wanted incomes
+     * 
+     * @return mixed  An array with all incomes of the user from the period or null if there are no incomes
+     */
+    public static function findIncomesByUserIDAndDate($user_id = 0, $start_date = '1990-01-01', $end_date = '1990-01-01')
+    {
+        $sql = 'SELECT incomes.income_id, incomes.value, incomes.date, income_categories.category, incomes.comment
+        FROM incomes
+        INNER JOIN income_categories
+        ON incomes.category_id = income_categories.category_id
+        WHERE incomes.user_id = :user_id
+        AND incomes.date BETWEEN :start_date AND :end_date
+        ORDER BY income_categories.category, 
+        incomes.date DESC';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->bindValue(':start_date', $start_date, PDO::PARAM_STR);
+        $stmt->bindValue(':end_date', $end_date, PDO::PARAM_STR);
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * Find total value of incomes of each category by user ID, start date and end date
+     * 
+     * @param int $user_id ID of logged in user
+     * @param string $start_date start date of wanted incomes
+     * @param string $end_date end date of wanted incomes
+     * 
+     * @return mixed  An array with total values (sums) of all incomes of the user for each category or null if there are no incomes
+     */
+    public static function findSumsOfEachCategoryByUserIDAndDate($user_id = 0, $start_date = '1990-01-01', $end_date = '1990-01-01')
+    {
+        $sql = 'SELECT income_categories.category, 
+                sum(incomes.value) AS "sum"
+                FROM incomes
+                LEFT OUTER JOIN income_categories
+                ON incomes.category_id = income_categories.category_id
+                WHERE incomes.user_id = :user_id
+                AND incomes.date BETWEEN :start_date AND :end_date
+                GROUP BY income_categories.category
+                ORDER BY sum DESC';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->bindValue(':start_date', $start_date, PDO::PARAM_STR);
+        $stmt->bindValue(':end_date', $end_date, PDO::PARAM_STR);
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
 }

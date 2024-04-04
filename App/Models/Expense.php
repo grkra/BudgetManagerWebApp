@@ -133,4 +133,67 @@ class Expense extends \Core\Model
         $stmt->execute();
         return $stmt->fetchAll();
     }
+
+    /**
+     * Find all expenses by user ID
+     * 
+     * @param int $user_id  ID of logged in user
+     * @param string $start_date start date of wanted incomes
+     * @param string $end_date end date of wanted incomes
+     * 
+     * @return mixed  An array with all expernses of the user or null if there are no expenses
+     */
+    public static function findExpensesByUserIDAndDate($user_id = 0, $start_date = '1990-01-01', $end_date = '1990-01-01')
+    {
+        $sql = 'SELECT expenses.expense_id, expenses.value, expenses.date, payment_categories.category, payment_methods.method, expenses.comment
+        FROM expenses
+        INNER JOIN payment_categories
+        ON expenses.category_id = payment_categories.category_id
+        INNER JOIN payment_methods
+        ON expenses.method_id = payment_methods.method_id
+        WHERE expenses.user_id = :user_id
+        AND expenses.date BETWEEN :start_date AND :end_date
+        ORDER BY payment_categories.category, 
+        expenses.date DESC';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->bindValue(':start_date', $start_date, PDO::PARAM_STR);
+        $stmt->bindValue(':end_date', $end_date, PDO::PARAM_STR);
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * Find total value of expenses of each category by user ID
+     * 
+     * @param int $user_id  ID of logged in user
+     * @param string $start_date start date of wanted incomes
+     * @param string $end_date end date of wanted incomes
+     * 
+     * @return mixed  An array with total values (sums) of all expenses of the user for each category or null if there are no expenses
+     */
+    public static function findSumsOfEachCategoryByUserIDAndDate($user_id = 0, $start_date = '1990-01-01', $end_date = '1990-01-01')
+    {
+        $sql = 'SELECT payment_categories.category, 
+                sum(expenses.value) AS "sum"
+                FROM expenses
+                LEFT OUTER JOIN payment_categories
+                ON expenses.category_id = payment_categories.category_id
+                WHERE expenses.user_id = :user_id
+                AND expenses.date BETWEEN :start_date AND :end_date
+                GROUP BY payment_categories.category
+                ORDER BY sum DESC';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->bindValue(':start_date', $start_date, PDO::PARAM_STR);
+        $stmt->bindValue(':end_date', $end_date, PDO::PARAM_STR);
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
 }
