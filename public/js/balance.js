@@ -1,5 +1,5 @@
-const customDateModal = new bootstrap.Modal($("#customDateModal"));
 const periodSelect = document.querySelector("#select");
+const originallySelectedPeriod = periodSelect.selectedIndex;
 
 for (let i = 0; i < periodSelect.length; i++) {
     const date = new Date();
@@ -27,24 +27,29 @@ for (let i = 0; i < periodSelect.length; i++) {
             year = date.getFullYear();
             periodSelect[i].value = `thisYear|${year}-01-01|${year}-12-31|${periodSelect[i].innerText}`;
             break;
-        case 3:
-            periodSelect[i].value = "custom|1990-01-01|1990-01-01|${periodSelect[i].innerText}";
-            break;
-        default:
-            break;
     }
 }
 
-$("#select").on("change", function () {
-    const selectedValue = this.value;
-    // if (selectedValue === "custom") {
-    //     customDateModal.show();
-    // };
-    this.form.submit();
+$("#select").on("change", function (event) {
+    const selectedIndex = this.selectedIndex;
+    if (selectedIndex === 3) {
+        new bootstrap.Modal($("#customDateModal")).show();
+    } else {
+        this.form.submit();
+    }
 })
 
+$("#modalSaveButton").on("click", function (event) {
+    const startDate = this.form.elements[0].value;
+    const endDate = this.form.elements[1].value;
 
+    periodSelect[3].value = `custom|${startDate}|${endDate}|${periodSelect[3].innerText}`;
+    periodSelect.form.submit();
+})
 
+$("#customDateModal").on("hidden.bs.modal", function (event) {
+    periodSelect.selectedIndex = originallySelectedPeriod;
+})
 
 $(".income, .expense").on("mouseenter", function () {
     changeColor(this.firstElementChild.lastElementChild);

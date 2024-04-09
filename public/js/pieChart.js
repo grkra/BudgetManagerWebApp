@@ -1,12 +1,16 @@
-const ctx = document.getElementById('balanceChart');
+function parseFloatSeparator(string) {
+    string = string.replaceAll(" ", "");
+    string = string.replaceAll(",", ".");
+    return string;
+}
 
 const incomes = Array.from($(".income"));
-const incomesValues = incomes.map(row => Number(row.lastElementChild.innerText));
+const incomesValues = incomes.map(row => Number(parseFloatSeparator(row.lastElementChild.innerText)));
 const incomesLabels = incomes.map(row => row.firstElementChild.innerText);
 const incomesTotal = incomesValues.reduce((accumulator, currentValue) => { return accumulator + currentValue }, 0);
 
 const expenses = Array.from($(".expense"));
-const expensesValues = expenses.map(row => Number(row.lastElementChild.innerText));
+const expensesValues = expenses.map(row => Number(parseFloatSeparator(row.lastElementChild.innerText)));
 const expensesLabels = expenses.map(row => row.firstElementChild.innerText);
 const expensesTotal = expensesValues.reduce((accumulator, currentValue) => { return accumulator + currentValue }, 0);
 
@@ -32,6 +36,7 @@ const IncomeDataLabels = {
 
         data.datasets[0].data.forEach((datapoint, index) => {
             chart.getDatasetMeta(0).data[index].y = height / 2 + top;
+            chart.getDatasetMeta(0).data[index].x = right - 5;
         })
 
         ctx.beginPath();
@@ -43,8 +48,6 @@ const IncomeDataLabels = {
 
     afterDatasetsDraw(chart, args, pluginOptions) {
         const { ctx, data, chartArea: { top, bottom, left, right, width, height } } = chart;
-
-        // console.log(chart.getDatasetMeta(0).data[0]);
 
         const x = chart.getDatasetMeta(0).data[0].x;
         const y = chart.getDatasetMeta(0).data[0].y;
@@ -69,28 +72,18 @@ const IncomeDataLabels = {
             const xDiagonalLineStart = outerRadius * Math.cos((startAngle + endAngle) / 2);
             const yDiagonalLineStart = outerRadius * Math.sin((startAngle + endAngle) / 2);
 
-            if (datapoint / expensesTotal < minPartDrawAllData) {
+            if (datapoint / incomesTotal < minPartDrawAllData) {
                 const diagonalLineLengthModifier = 0.5 * smallValuesCounter - 0.3;
                 smallValuesCounter++
 
-                // kierunek linii skośnej (lewo/prawo)
-                // const xLine = x >= halfWidth ? x + 25 : x - 25; 
                 const xDiagonalLineEnd = xDiagonalLineStart - 25 * diagonalLineLengthModifier;
 
-                // kierunek linii skośnej (góra/dół)
-                // const yLine = yPos >= halfHeight ? yPos + 25 : yPos - 25;
                 const yDiagonalLineEnd = yDiagonalLineStart >= 0 ? yDiagonalLineStart + 25 * diagonalLineLengthModifier : yDiagonalLineStart - 25 * diagonalLineLengthModifier;
 
-                // kierunek linii poziomej (lewo/prawo)
-                // const extraLine = x >= halfWidth ? 25 : -25; 
                 const xhorizontalLineEnd = -25;
 
-                // szerokość tekstu
-                // const textWidth = ctx.measureText(datapoint.toLocaleString()).width;
                 const textWidth = ctx.measureText(chart.data.labels[index]).width;
 
-                // kierunek odsunięcia etykiety od linii poziomej (lewo/prawo)
-                // const textWidthPosition = x >= halfWidth ? textWidth : -textWidth;
                 const textWidthPosition = -textWidth / 1.9;
 
                 ctx.beginPath();
@@ -104,7 +97,11 @@ const IncomeDataLabels = {
                 const x = outerRadius / 2 * Math.cos((startAngle + endAngle) / 2);
                 const y = outerRadius / 2 * Math.sin((startAngle + endAngle) / 2);
                 ctx.fillText(chart.data.labels[index], x, y);
-                ctx.fillText(datapoint.toLocaleString(), x, y + 15);
+                ctx.fillText(datapoint.toLocaleString("pl-PL", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                    useGrouping: "always"
+                }), x, y + 15);
             }
         });
 
@@ -147,6 +144,7 @@ const configIncomes = {
             return incomesTotal / maxTotal * 180;
         },
         rotation: 180,
+        radius: 150,
     },
 }
 
@@ -170,6 +168,7 @@ const ExpenseDataLabels = {
 
         data.datasets[0].data.forEach((datapoint, index) => {
             chart.getDatasetMeta(0).data[index].y = height / 2 + top;
+            chart.getDatasetMeta(0).data[index].x = 5;
         })
     },
 
@@ -203,24 +202,15 @@ const ExpenseDataLabels = {
                 const diagonalLineLengthModifier = 0.5 * smallValuesCounter - 0.3;
                 smallValuesCounter++
 
-                // kierunek linii skośnej (lewo/prawo)
-                // const xLine = x >= halfWidth ? x + 25 : x - 25; 
+
                 const xDiagonalLineEnd = xDiagonalLineStart + 25 * diagonalLineLengthModifier;
 
-                // kierunek linii skośnej (góra/dół)
-                // const yLine = yPos >= halfHeight ? yPos + 25 : yPos - 25;
                 const yDiagonalLineEnd = yDiagonalLineStart >= 0 ? yDiagonalLineStart + 25 * diagonalLineLengthModifier : yDiagonalLineStart - 25 * diagonalLineLengthModifier;
 
-                // kierunek linii poziomej (lewo/prawo)
-                // const extraLine = x >= halfWidth ? 25 : -25; 
                 const xhorizontalLineEnd = 25;
 
-                // szerokość tekstu
-                // const textWidth = ctx.measureText(datapoint.toLocaleString()).width;
                 const textWidth = ctx.measureText(chart.data.labels[index]).width;
 
-                // kierunek odsunięcia etykiety od linii poziomej (lewo/prawo)
-                // const textWidthPosition = x >= halfWidth ? textWidth : -textWidth;
                 const textWidthPosition = textWidth / 1.9;
 
                 ctx.beginPath();
@@ -229,14 +219,16 @@ const ExpenseDataLabels = {
                 ctx.lineTo(xDiagonalLineEnd + xhorizontalLineEnd, yDiagonalLineEnd);
                 ctx.stroke();
 
-                // ctx.fillText(datapoint.toLocaleString(), xLine + extraLine + textWidthPosition, yLine);      //WYŚWIETLA WARTOŚĆ
-
                 ctx.fillText(chart.data.labels[index], xDiagonalLineEnd + xhorizontalLineEnd + textWidthPosition, yDiagonalLineEnd);
             } else {
                 const x = outerRadius / 2 * Math.cos((startAngle + endAngle) / 2);
                 const y = outerRadius / 2 * Math.sin((startAngle + endAngle) / 2);
                 ctx.fillText(chart.data.labels[index], x, y);
-                ctx.fillText(datapoint.toLocaleString(), x, y + 15);
+                ctx.fillText(datapoint.toLocaleString("pl-PL", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                    useGrouping: "always"
+                }), x, y + 15);
             }
         });
 
@@ -278,7 +270,7 @@ const configExpenses = {
         circumference: (ctx) => {
             return expensesTotal / maxTotal * 180;
         },
-        rotation: 0,
+        radius: 150,
     },
 }
 
@@ -287,3 +279,33 @@ const incomeChart = incomesTotal > 0 && new Chart(
     document.getElementById('incomesChart'), configIncomes);
 const expenseChart = expensesTotal > 0 && new Chart(
     document.getElementById('expensesChart'), configExpenses);
+
+// BALANCE
+const balance = document.querySelector("#balance");
+let initialBalance = 0;
+const finalBalance = incomesTotal - expensesTotal;
+
+if (finalBalance >= 0) {
+    balance.classList.add("text-success");
+} else {
+    balance.classList.add("text-danger");
+}
+
+const balanceInterval = setInterval(countBalance, 1)
+function countBalance() {
+    initialBalance = initialBalance + (finalBalance / 50);
+    balance.innerText = initialBalance.toLocaleString("pl-PL", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+        useGrouping: "always"
+    });
+
+    if (Math.abs(initialBalance) >= Math.abs(finalBalance)) {
+        clearInterval(balanceInterval);
+        balance.innerText = finalBalance.toLocaleString("pl-PL", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+            useGrouping: "always"
+        });
+    }
+}

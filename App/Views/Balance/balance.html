@@ -6,11 +6,8 @@ Bilans
 
 {% block footer %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
-<script src="https://unpkg.com/chart.js-plugin-labels-dv/dist/chartjs-plugin-labels.min.js"></script>
 <script src="/js/pieChart.js"></script>
 <script src="/js/balance.js"></script>
-<script src="/js/period.js"></script>
 {% endblock %}
 
 
@@ -36,7 +33,7 @@ Bilans
               <option value="" {{ period[0]=="thisMonth" ? "selected" : "" }}>Bieżący miesiąc</option>
               <option value="" {{ period[0]=="lastMonth" ? "selected" : "" }}>Poprzedni miesiąc</option>
               <option value="" {{ period[0]=="thisYear" ? "selected" : "" }}>Bieżący rok</option>
-              <option value="" {{ period[0]=="custom" ? "selected" : "" }} disabled>Niestandardowy</option>
+              <option value="" {{ period[0]=="custom" ? "selected" : "" }}>Niestandardowy</option>
             </select>
           </form>
         </div>
@@ -47,38 +44,46 @@ Bilans
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header">
-              <h2 class="modal-title fs-5" id="customDateModalLabel">Wybierz okres niestandardowy</h2>
+              <h1 class="modal-title fs-5" id="customDateModalLabel">Wybierz okres niestandardowy</h1>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body row mx-0">
-              <div class="col">
-                <label class="form-label" for="startDate"> Od:</label>
-                <input type="date" class="form-control border-secondary-subtle" id="startDate" name="startDate" />
+            <form id="modalForm">
+              <div class="modal-body row mx-0">
+                <div class="col">
+                  <label class="form-label" for="startDate"> Od:</label>
+                  <input type="date" class="form-control border-secondary-subtle" id="startDate" name="startDate"
+                    required />
+                </div>
+                <div class="col">
+                  <label class="form-label" for="endDate"> Do:</label>
+                  <input type="date" class="form-control border-secondary-subtle" id="endDate" name="endDate"
+                    required />
+                </div>
               </div>
-              <div class="col">
-                <label class="form-label" for="endDate"> Do:</label>
-                <input type="date" class="form-control border-secondary-subtle" id="endDate" name="endDate" />
+              <div class="modal-footer row mx-0">
+                <div class="col">
+                  <button type="button" class="btn btn-outline-primary w-100" data-bs-dismiss="modal">Anuluj</button>
+                </div>
+                <div class="col">
+                  <button id="modalSaveButton" type="button" class="btn btn-primary w-100">Ok</button>
+                </div>
               </div>
-            </div>
-            <div class="modal-footer row mx-0">
-              <div class="col">
-                <button type="button" class="btn btn-outline-primary w-100" data-bs-dismiss="modal">Anuluj</button>
-              </div>
-              <div class="col">
-                <button type="button" class="btn btn-primary w-100">Ok</button>
-              </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>
 
       <div class="container">
-        <div class="row row-cols-2">
-          <div class="col chartBox">
+        <div class="row row-cols-1 row-cols-lg-3 align-items-center">
+          <div class="d-none d-lg-block col p-0 m-0">
             <canvas class="pointer" id="incomesChart"></canvas>
           </div>
-          <div class="col chartBox">
+          <div class="d-none d-lg-block col p-0 m-0">
             <canvas class="pointer" id="expensesChart"></canvas>
+          </div>
+          <div class="col p-0 m-0 d-lg-flex flex-row-reverse">
+            <h2 class="display-2 fw-bold text-center text-lg-end pointer" id="balance">
+            </h2>
           </div>
         </div>
       </div>
@@ -107,7 +112,7 @@ Bilans
                   d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
               </svg>
             </td>
-            <td>{{income_category.sum|number_format(2, '.', '')}}</td>
+            <td>{{income_category.sum|number_format(2, ',', ' ')}}</td>
           </tr>
 
           <tr class="d-none" id="income-{{category_id}}-details">
@@ -127,7 +132,7 @@ Bilans
                   <tr>
                     <td>{{ income.date }}</td>
                     <td>{{ income.comment }}</td>
-                    <td>{{ income.value|number_format(2, '.', '') }}</td>
+                    <td>{{ income.value|number_format(2, ',', ' ') }}</td>
                   </tr>
                   {% endif %}
                   {% endfor %}
@@ -141,13 +146,11 @@ Bilans
         <tfoot class="table-group-divider">
           <tr>
             <td>Razem</td>
-            <td>{{ total_income|number_format(2, '.', '') }}</td>
+            <td>{{ total_income|number_format(2, ',', ' ') }}</td>
           </tr>
         </tfoot>
       </table>
-
     </div>
-
 
     <div class="p-5 mb-4 bg-body rounded-3">
       <h2 class="m-0 pb-4 pb-md-5 lh-1">Wydatki</h2>
@@ -174,7 +177,7 @@ Bilans
                   d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
               </svg>
             </td>
-            <td>{{ expense_category.sum|number_format(2, '.', '') }}</td>
+            <td>{{ expense_category.sum|number_format(2, ',', ' ') }}</td>
           </tr>
 
           <tr class="d-none" id="expense-{{category_id}}-details">
@@ -194,7 +197,7 @@ Bilans
                   <tr>
                     <td>{{ expense.date }}</td>
                     <td>{{ expense.comment }}</td>
-                    <td>{{ expense.value|number_format(2, '.', '') }}</td>
+                    <td>{{ expense.value|number_format(2, ',', ' ') }}</td>
                   </tr>
                   {% endif %}
                   {% endfor %}
@@ -208,7 +211,7 @@ Bilans
         <tfoot class="table-group-divider">
           <tr>
             <td>Razem</td>
-            <td>{{ total_expense|number_format(2, '.', '') }}</td>
+            <td>{{ total_expense|number_format(2, ',', ' ') }}</td>
           </tr>
         </tfoot>
       </table>
