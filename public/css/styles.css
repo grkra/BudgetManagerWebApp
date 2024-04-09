@@ -8,3 +8,19 @@ label.error {
 fieldset label.error {
 		display: none;
 	}
+
+svg.red {
+  fill: red;
+}
+
+.pointer {
+  cursor: pointer
+}
+
+tr.income:hover, tr.expense:hover {
+  font-weight: bold;
+}
+
+svg.rotated {
+  transform: rotate(180deg);
+}
