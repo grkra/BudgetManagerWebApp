@@ -37,7 +37,7 @@ class Income extends \Core\Model
      * 
      * @return boolean True if the income was saved, false otherwise
      */
-    public function save($user_id = 0)
+    public function save($user_id)
     {
         $this->validate();
 

@@ -4,6 +4,45 @@
 Ustawienia
 {% endblock %}
 
+{% block footer %}
+<script>
+  $(document).ready(function () {
+    /**
+     * Validate add income category
+     */
+    $('#formAddIncomeCategory').validate({
+      rules: {
+        category: {
+          required: true,
+          remote: '/properties/validate-income-category'
+        }
+      },
+      messages: {
+        category: {
+          remote: 'Taka kategoria już istnieje.'
+        }
+      }
+    });
+
+    /**
+     * Validate add expense category
+     */
+    $('#formAddExpenseCategory').validate({
+      rules: {
+        category: {
+          required: true,
+          remote: '/properties/validate-expense-category'
+        }
+      },
+      messages: {
+        category: {
+          remote: 'Taka kategoria już istnieje.'
+        }
+      }
+    });
+  });
+</script>
+{% endblock %}
 
 {% block body %}
 <main>
@@ -15,12 +54,21 @@ Ustawienia
           <h2 class="fs-2 text-body-emphasis">Przychody</h2>
           <div class="mb-3">
             <button class="w-100 btn btn-lg btn-primary" type="button" data-bs-toggle="collapse"
-              data-bs-target="#collapseAddIncome" aria-expanded="false" aria-controls="collapseAddIncome">
+              data-bs-target="#collapseAddIncomeCategory" aria-expanded="{{incomeCategory.errors is not empty ? " true"
+              :"false" }}" aria-controls="collapseAddIncomeCategory">
               Dodaj nową kategorię
             </button>
-            <div class="collapse" id="collapseAddIncome">
+            <div class="collapse {{incomeCategory.errors is not empty ? " show" :"" }}" id="collapseAddIncomeCategory">
               <div class="card card-body">
-                <form>
+                <form id="formAddIncomeCategory" method="post" action="/properties/add-income-category">
+                  {% if incomeCategory.errors is not empty %}
+                  <p>Błędy: </p>
+                  <ul>
+                    {% for error in incomeCategory.errors %}
+                    <li><label>{{ error }}</label></li>
+                    {% endfor %}
+                  </ul>
+                  {% endif %}
                   <div class="mb-3 input-group">
                     <span class="input-group-text bg-body-secondary border-secondary-subtle"><svg
                         xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -28,8 +76,8 @@ Ustawienia
                         <path
                           d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
                       </svg></span>
-                    <input type="email" class="form-control border-secondary-subtle" id="iCategory"
-                      placeholder="Kategoria" name="iCategory" />
+                    <input type="text" class="form-control border-secondary-subtle" placeholder="Kategoria"
+                      name="category" value="{{incomeCategory.category}}" />
                   </div>
 
                   <input class="w-100 btn btn-primary btn-lg" type="submit" value="Dodaj" />
@@ -99,12 +147,22 @@ Ustawienia
 
           <div class="mb-3">
             <button class="w-100 btn btn-lg btn-primary" type="button" data-bs-toggle="collapse"
-              data-bs-target="#collapseAddExpense" aria-expanded="false" aria-controls="collapseAddExpense">
+              data-bs-target="#collapseAddExpenseCategory" aria-expanded="{{expenseCategory.errors is not empty ? "
+              true" :"false" }}" aria-controls="collapseAddExpenseCategory">
               Dodaj nową kategorię
             </button>
-            <div class="collapse" id="collapseAddExpense">
+            <div class="collapse {{expenseCategory.errors is not empty ? " show" :"" }}"
+              id="collapseAddExpenseCategory">
               <div class="card card-body">
-                <form>
+                <form id="formAddExpenseCategory" method="post" action="/properties/add-expense-category">
+                  {% if expenseCategory.errors is not empty %}
+                  <p>Błędy: </p>
+                  <ul>
+                    {% for error in expenseCategory.errors %}
+                    <li><label>{{ error }}</label></li>
+                    {% endfor %}
+                  </ul>
+                  {% endif %}
                   <div class="mb-3 input-group">
                     <span class="input-group-text bg-body-secondary border-secondary-subtle"><svg
                         xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -112,8 +170,8 @@ Ustawienia
                         <path
                           d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
                       </svg></span>
-                    <input type="email" class="form-control border-secondary-subtle" id="iCategory"
-                      placeholder="Kategoria" name="iCategory" />
+                    <input type="text" class="form-control border-secondary-subtle" placeholder="Kategoria"
+                      name="category" value="{{expenseCategory.category}}" />
                   </div>
 
                   <input class="w-100 btn btn-primary btn-lg" type="submit" value="Dodaj" />

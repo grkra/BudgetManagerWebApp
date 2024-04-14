@@ -4,8 +4,6 @@ namespace App\Controllers;
 use App\Flash;
 use \Core\View;
 use \App\Models\Expense;
-use \App\Models\PaymentCategory;
-use \App\Models\PaymentMethod;
 use App\Auth;
 
 /**

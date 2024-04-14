@@ -2,8 +2,8 @@
 namespace App\Controllers;
 
 use App\Flash;
-use \Core\View;
-use \App\Models\Income;
+use Core\View;
+use App\Models\Income;
 use App\Auth;
 
 /**
