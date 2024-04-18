@@ -23,6 +23,7 @@ class IncomeCategory extends \Core\Model
     /**
      * Class constructor
      * 
+     * @param array $user_id  
      * @param array $data  Initial property values
      *
      * @return void
@@ -38,11 +39,11 @@ class IncomeCategory extends \Core\Model
     /**
      * Saves the income category with the current property values.
      * 
-     * @return boolean True if the income was saved, false otherwise
+     * @return boolean True if the income category was saved, false otherwise
      */
     public function save()
     {
-        $this->validate();
+        $this->validate($this->oldCategory ?? null);
 
         if (empty($this->errors)) {
             $sql = 'INSERT INTO income_categories (user_id, category)
@@ -51,6 +52,30 @@ class IncomeCategory extends \Core\Model
             $stmt = $db->prepare($sql);
             $stmt->bindValue(':user_id', $this->user_id, PDO::PARAM_INT);
             $stmt->bindValue(':category', ucfirst($this->category), PDO::PARAM_STR);
+            return $stmt->execute();
+        }
+        return false;
+    }
+
+    /**
+     * Changes the income category with the current property values.
+     * 
+     * @return boolean True if the income category was changed, false otherwise
+     */
+    public function change()
+    {
+        $this->validate($this->oldCategory ?? null);
+
+        if (empty($this->errors)) {
+            $sql = 'UPDATE income_categories
+            SET category = :category
+            WHERE category_id = :category_id
+            AND user_id = :user_id';
+            $db = static::getDB();
+            $stmt = $db->prepare($sql);
+            $stmt->bindValue(':category', ucfirst($this->category), PDO::PARAM_STR);
+            $stmt->bindValue(':category_id', $this->oldCategory, PDO::PARAM_INT);
+            $stmt->bindValue(':user_id', $this->user_id, PDO::PARAM_INT);
             return $stmt->execute();
         }
         return false;
@@ -68,6 +93,12 @@ class IncomeCategory extends \Core\Model
         }
         if (static::categoryExists($this->user_id, $this->category)) {
             $this->errors[] = 'Taka kategoria już istnieje.';
+        }
+        if (
+            isset($this->oldCategory)
+            && $this->oldCategory == ''
+        ) {
+            $this->errors[] = 'Nie wybrano kategorii do zmiany.';
         }
     }
 
@@ -95,7 +126,7 @@ class IncomeCategory extends \Core\Model
      * 
      * @param string $user_id userID to search for
      * 
-     * @return mixed Array od income categories of the user if found, false otherwise
+     * @return mixed Array of income categories of the user if found, false otherwise
      */
     public static function findByUserID($user_id)
     {

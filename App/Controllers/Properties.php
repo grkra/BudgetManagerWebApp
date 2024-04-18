@@ -4,6 +4,7 @@ namespace App\Controllers;
 use App\Flash;
 use App\Models\IncomeCategory;
 use App\Models\PaymentCategory;
+use App\Models\PaymentMethod;
 use Core\View;
 use App\Auth;
 
@@ -38,13 +39,29 @@ class Properties extends Authenticated
      */
     public function addIncomeCategoryAction()
     {
-        $incomeCategory = new IncomeCategory($this->user->user_id, $_POST);
+        $addedIncomeCategory = new IncomeCategory($this->user->user_id, $_POST);
 
-        if ($incomeCategory->save()) {
+        if ($addedIncomeCategory->save()) {
             Flash::addMessage('Dodano kategorię przychodów', 'success');
             $this->redirect('/');
         } else {
-            View::renderTemplate('Properties/properties.html', ['incomeCategory' => $incomeCategory]);
+            View::renderTemplate('Properties/properties.html', ['addedIncomeCategory' => $addedIncomeCategory]);
+        }
+    }
+
+    /**
+     * Changes existing income category
+     * @return void
+     */
+    public function changeIncomeCategoryAction()
+    {
+        $changedIncomeCategory = new IncomeCategory($this->user->user_id, $_POST);
+
+        if ($changedIncomeCategory->change()) {
+            Flash::addMessage('Zmieniono kategorię przychodów', 'success');
+            $this->redirect('/');
+        } else {
+            View::renderTemplate('Properties/properties.html', ['changedIncomeCategory' => $changedIncomeCategory]);
         }
     }
 
@@ -54,13 +71,61 @@ class Properties extends Authenticated
      */
     public function addExpenseCategoryAction()
     {
-        $paymentCategory = new PaymentCategory($this->user->user_id, $_POST);
+        $addedPaymentCategory = new PaymentCategory($this->user->user_id, $_POST);
 
-        if ($paymentCategory->save()) {
+        if ($addedPaymentCategory->save()) {
             Flash::addMessage('Dodano kategorię wydatków', 'success');
             $this->redirect('/');
         } else {
-            View::renderTemplate('Properties/properties.html', ['expenseCategory' => $paymentCategory]);
+            View::renderTemplate('Properties/properties.html', ['addedExpenseCategory' => $addedPaymentCategory]);
+        }
+    }
+
+    /**
+     * Changes existing expense category
+     * @return void
+     */
+    public function changeExpenseCategoryAction()
+    {
+        $changedPaymentCategory = new PaymentCategory($this->user->user_id, $_POST);
+
+        if ($changedPaymentCategory->change()) {
+            Flash::addMessage('Zmieniono kategorię wydatków', 'success');
+            $this->redirect('/');
+        } else {
+            View::renderTemplate('Properties/properties.html', ['changedExpenseCategory' => $changedPaymentCategory]);
+        }
+    }
+
+    /**
+     * Creates new payment method
+     * @return void
+     */
+    public function addPaymentMethodAction()
+    {
+        $addedPaymentMethod = new PaymentMethod($this->user->user_id, $_POST);
+
+        if ($addedPaymentMethod->save()) {
+            Flash::addMessage('Dodano metodę płatności', 'success');
+            $this->redirect('/');
+        } else {
+            View::renderTemplate('Properties/properties.html', ['addedPaymentMethod' => $addedPaymentMethod]);
+        }
+    }
+
+    /**
+     * Changes existing payment method
+     * @return void
+     */
+    public function changePaymentMethodAction()
+    {
+        $changedPaymentMethod = new PaymentMethod($this->user->user_id, $_POST);
+
+        if ($changedPaymentMethod->change()) {
+            Flash::addMessage('Zmieniono metodę płatności', 'success');
+            $this->redirect('/');
+        } else {
+            View::renderTemplate('Properties/properties.html', ['changedPaymentMethod' => $changedPaymentMethod]);
         }
     }
 
@@ -85,6 +150,19 @@ class Properties extends Authenticated
     public function validateExpenseCategoryAction()
     {
         $is_valid = !PaymentCategory::categoryExists($this->user->user_id, $_GET['category']);
+
+        header('Content-Type: application/json');
+        echo json_encode($is_valid);
+    }
+
+    /**
+     * Validates if payment method is available (AJAX).
+     * 
+     * @return void
+     */
+    public function validatePaymentMethodAction()
+    {
+        $is_valid = !PaymentMethod::methodExists($this->user->user_id, $_GET['method']);
 
         header('Content-Type: application/json');
         echo json_encode($is_valid);

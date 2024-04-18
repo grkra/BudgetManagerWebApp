@@ -6,10 +6,6 @@ use PDO;
 
 /**
  * Payment category model
- * 
- * @param string $userId The user ID
- * 
- * @return mixed  An array with all the payment categories of the user or null if there are no categories
  */
 #[\AllowDynamicProperties]
 class PaymentCategory extends \Core\Model
@@ -38,7 +34,7 @@ class PaymentCategory extends \Core\Model
     /**
      * Saves the payment category with the current property values.
      * 
-     * @return boolean True if the income was saved, false otherwise
+     * @return boolean True if the payment category was saved, false otherwise
      */
     public function save()
     {
@@ -57,6 +53,30 @@ class PaymentCategory extends \Core\Model
     }
 
     /**
+     * Changes the expense category with the current property values.
+     * 
+     * @return boolean True if the expense category was changed, false otherwise
+     */
+    public function change()
+    {
+        $this->validate($this->oldCategory ?? null);
+
+        if (empty($this->errors)) {
+            $sql = 'UPDATE payment_categories
+            SET category = :category
+            WHERE category_id = :category_id
+            AND user_id = :user_id';
+            $db = static::getDB();
+            $stmt = $db->prepare($sql);
+            $stmt->bindValue(':category', ucfirst($this->category), PDO::PARAM_STR);
+            $stmt->bindValue(':category_id', $this->oldCategory, PDO::PARAM_INT);
+            $stmt->bindValue(':user_id', $this->user_id, PDO::PARAM_INT);
+            return $stmt->execute();
+        }
+        return false;
+    }
+
+    /**
      * Validate current property values, adding valiation error messages to the errors array property
      *
      * @return void
@@ -68,6 +88,12 @@ class PaymentCategory extends \Core\Model
         }
         if (static::categoryExists($this->user_id, $this->category)) {
             $this->errors[] = 'Taka kategoria już istnieje.';
+        }
+        if (
+            isset($this->oldCategory)
+            && $this->oldCategory == ''
+        ) {
+            $this->errors[] = 'Nie wybrano kategorii do zmiany.';
         }
     }
 
@@ -90,6 +116,13 @@ class PaymentCategory extends \Core\Model
         return false;
     }
 
+    /**
+     * Finds expense categories by userID
+     * 
+     * @param string $user_id userID to search for
+     * 
+     * @return mixed Array of expense categories of the user if found, false otherwise
+     */
     public static function findByUserID($userID)
     {
         $sql = 'SELECT * FROM payment_categories 

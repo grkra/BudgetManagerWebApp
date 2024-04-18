@@ -5,43 +5,7 @@ Ustawienia
 {% endblock %}
 
 {% block footer %}
-<script>
-  $(document).ready(function () {
-    /**
-     * Validate add income category
-     */
-    $('#formAddIncomeCategory').validate({
-      rules: {
-        category: {
-          required: true,
-          remote: '/properties/validate-income-category'
-        }
-      },
-      messages: {
-        category: {
-          remote: 'Taka kategoria już istnieje.'
-        }
-      }
-    });
-
-    /**
-     * Validate add expense category
-     */
-    $('#formAddExpenseCategory').validate({
-      rules: {
-        category: {
-          required: true,
-          remote: '/properties/validate-expense-category'
-        }
-      },
-      messages: {
-        category: {
-          remote: 'Taka kategoria już istnieje.'
-        }
-      }
-    });
-  });
-</script>
+<script src="/js/propertiesValidations.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -54,17 +18,18 @@ Ustawienia
           <h2 class="fs-2 text-body-emphasis">Przychody</h2>
           <div class="mb-3">
             <button class="w-100 btn btn-lg btn-primary" type="button" data-bs-toggle="collapse"
-              data-bs-target="#collapseAddIncomeCategory" aria-expanded="{{incomeCategory.errors is not empty ? " true"
-              :"false" }}" aria-controls="collapseAddIncomeCategory">
+              data-bs-target="#collapseAddIncomeCategory" aria-expanded="{{addedIncomeCategory.errors is not empty ? "
+              true" :"false" }}" aria-controls="collapseAddIncomeCategory">
               Dodaj nową kategorię
             </button>
-            <div class="collapse {{incomeCategory.errors is not empty ? " show" :"" }}" id="collapseAddIncomeCategory">
+            <div class="collapse {{addedIncomeCategory.errors is not empty ? " show" :"" }}"
+              id="collapseAddIncomeCategory">
               <div class="card card-body">
                 <form id="formAddIncomeCategory" method="post" action="/properties/add-income-category">
-                  {% if incomeCategory.errors is not empty %}
+                  {% if addedIncomeCategory.errors is not empty %}
                   <p>Błędy: </p>
                   <ul>
-                    {% for error in incomeCategory.errors %}
+                    {% for error in addedIncomeCategory.errors %}
                     <li><label>{{ error }}</label></li>
                     {% endfor %}
                   </ul>
@@ -77,7 +42,7 @@ Ustawienia
                           d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
                       </svg></span>
                     <input type="text" class="form-control border-secondary-subtle" placeholder="Kategoria"
-                      name="category" value="{{incomeCategory.category}}" />
+                      name="category" value="{{addedIncomeCategory.category}}" />
                   </div>
 
                   <input class="w-100 btn btn-primary btn-lg" type="submit" value="Dodaj" />
@@ -88,19 +53,31 @@ Ustawienia
 
           <div class="mb-3">
             <button class="w-100 btn btn-lg btn-primary" type="button" data-bs-toggle="collapse"
-              data-bs-target="#collapseChangeIncome" aria-expanded="false" aria-controls="collapseChangeIncome">
+              data-bs-target="#collapseChangeIncomeCategory"
+              aria-expanded="{{changedIncomeCategory.errors is not empty ? " true" :"false" }}"
+              aria-controls="collapseChangeIncomeCategory">
               Edytuj kategorię
             </button>
-            <div class="collapse" id="collapseChangeIncome">
+            <div class="collapse {{changedIncomeCategory.errors is not empty ? " show" :"" }}"
+              id="collapseChangeIncomeCategory">
               <div class="card card-body">
-                <form>
-                  <select class="form-select mb-3" aria-label="Default select example">
-                    <option selected>Wybierz kategorię</option>
-                    <option value="1">Wynagrodzenie</option>
-                    <option value="2">Odsetki bankowe</option>
-                    <option value="3">Sprzedaż na allegro</option>
-                    <option value="3">Inny</option>
-                  </select>
+                <form id="formChangeIncomeCategory" method="post" action="/properties/change-income-category">
+                  {% if changedIncomeCategory.errors is not empty %}
+                  <p>Błędy: </p>
+                  <ul>
+                    {% for error in changedIncomeCategory.errors %}
+                    <li><label>{{ error }}</label></li>
+                    {% endfor %}
+                  </ul>
+                  {% endif %}
+                  <div class="mb-3">
+                    <select class="form-select" aria-label="Wybierz kategorię" name="oldCategory">
+                      <option value="" selected>Wybierz kategorię</option>
+                      {% for income_category in income_categories %}
+                      <option value="{{income_category.category_id}}">{{income_category.category}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
 
                   <div class="mb-3 input-group">
                     <span class="input-group-text bg-body-secondary border-secondary-subtle"><svg
@@ -109,8 +86,8 @@ Ustawienia
                         <path
                           d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
                       </svg></span>
-                    <input type="email" class="form-control border-secondary-subtle" id="iCategory"
-                      placeholder="Nowa nazwa kategorii" name="iCategory" />
+                    <input type="text" class="form-control border-secondary-subtle" placeholder="Nowa nazwa kategorii"
+                      name="category" value="{{changedIncomeCategory.category}}" />
                   </div>
 
                   <input class="w-100 btn btn-primary btn-lg" type="submit" value="Zmień" />
@@ -147,18 +124,18 @@ Ustawienia
 
           <div class="mb-3">
             <button class="w-100 btn btn-lg btn-primary" type="button" data-bs-toggle="collapse"
-              data-bs-target="#collapseAddExpenseCategory" aria-expanded="{{expenseCategory.errors is not empty ? "
+              data-bs-target="#collapseAddExpenseCategory" aria-expanded="{{addedExpenseCategory.errors is not empty ? "
               true" :"false" }}" aria-controls="collapseAddExpenseCategory">
               Dodaj nową kategorię
             </button>
-            <div class="collapse {{expenseCategory.errors is not empty ? " show" :"" }}"
+            <div class="collapse {{addedExpenseCategory.errors is not empty ? " show" :"" }}"
               id="collapseAddExpenseCategory">
               <div class="card card-body">
                 <form id="formAddExpenseCategory" method="post" action="/properties/add-expense-category">
-                  {% if expenseCategory.errors is not empty %}
+                  {% if addedExpenseCategory.errors is not empty %}
                   <p>Błędy: </p>
                   <ul>
-                    {% for error in expenseCategory.errors %}
+                    {% for error in addedExpenseCategory.errors %}
                     <li><label>{{ error }}</label></li>
                     {% endfor %}
                   </ul>
@@ -171,7 +148,7 @@ Ustawienia
                           d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
                       </svg></span>
                     <input type="text" class="form-control border-secondary-subtle" placeholder="Kategoria"
-                      name="category" value="{{expenseCategory.category}}" />
+                      name="category" value="{{addedExpenseCategory.category}}" />
                   </div>
 
                   <input class="w-100 btn btn-primary btn-lg" type="submit" value="Dodaj" />
@@ -182,20 +159,31 @@ Ustawienia
 
           <div class="mb-3">
             <button class="w-100 btn btn-lg btn-primary" type="button" data-bs-toggle="collapse"
-              data-bs-target="#collapseChangeExpense" aria-expanded="false" aria-controls="collapseChangeExpense">
+              data-bs-target="#collapseChangeExpenseCategory"
+              aria-expanded="{{changedExpenseCategory.errors is not empty ? " true" :"false" }}"
+              aria-controls="collapseChangeExpenseCategory">
               Edytuj kategorię
             </button>
-            <div class="collapse" id="collapseChangeExpense">
+            <div class="collapse {{changedExpenseCategory.errors is not empty ? " show" :"" }}"
+              id="collapseChangeExpenseCategory">
               <div class="card card-body">
-                <form>
-                  <select class="form-select mb-3" aria-label="Default select example">
-                    <option selected>Wybierz kategorię</option>
-                    <option value="1">Wynagrodzenie</option>
-                    <option value="2">Odsetki bankowe</option>
-                    <option value="3">Sprzedaż na allegro</option>
-                    <option value="3">Inny</option>
-                  </select>
-
+                <form id="formChangeExpenseCategory" method="post" action="/properties/change-expense-category">
+                  {% if changedExpenseCategory.errors is not empty %}
+                  <p>Błędy: </p>
+                  <ul>
+                    {% for error in changedExpenseCategory.errors %}
+                    <li><label>{{ error }}</label></li>
+                    {% endfor %}
+                  </ul>
+                  {% endif %}
+                  <div class="mb-3">
+                    <select class="form-select" aria-label="Wybierz kategorię" name="oldCategory">
+                      <option value="" selected>Wybierz kategorię</option>
+                      {% for payment_category in payment_categories %}
+                      <option value="{{payment_category.category_id}}">{{payment_category.category}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
                   <div class="mb-3 input-group">
                     <span class="input-group-text bg-body-secondary border-secondary-subtle"><svg
                         xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -203,8 +191,8 @@ Ustawienia
                         <path
                           d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
                       </svg></span>
-                    <input type="email" class="form-control border-secondary-subtle" id="iCategory"
-                      placeholder="Nowa nazwa kategorii" name="iCategory" />
+                    <input type="text" class="form-control border-secondary-subtle" placeholder="Nowa nazwa kategorii"
+                      name="category" value="{{changedExpenseCategory.category}}" />
                   </div>
 
                   <input class="w-100 btn btn-primary btn-lg" type="submit" value="Zmień" />
@@ -240,12 +228,22 @@ Ustawienia
           <h2 class="fs-2 text-body-emphasis">Metody płatności</h2>
           <div class="mb-3">
             <button class="w-100 btn btn-lg btn-primary" type="button" data-bs-toggle="collapse"
-              data-bs-target="#collapseAddPayment" aria-expanded="false" aria-controls="collapseAddPayment">
+              data-bs-target="#collapseAddPaymentMethod" aria-expanded="{{addedPaymentMethod.errors is not empty ? "
+              true" :"false" }}" aria-controls="collapseAddPaymentMethod">
               Dodaj nową metodę płatności
             </button>
-            <div class="collapse" id="collapseAddPayment">
+            <div class="collapse {{addedPaymentMethod.errors is not empty ? " show" :"" }}"
+              id="collapseAddPaymentMethod">
               <div class="card card-body">
-                <form>
+                <form id="formAddPaymentMethod" method="post" action="/properties/add-payment-method">
+                  {% if addedPaymentMethod.errors is not empty %}
+                  <p>Błędy: </p>
+                  <ul>
+                    {% for error in addedPaymentMethod.errors %}
+                    <li><label>{{ error }}</label></li>
+                    {% endfor %}
+                  </ul>
+                  {% endif %}
                   <div class="mb-3 input-group">
                     <span class="input-group-text bg-body-secondary border-secondary-subtle"><svg
                         xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -253,8 +251,8 @@ Ustawienia
                         <path
                           d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
                       </svg></span>
-                    <input type="email" class="form-control border-secondary-subtle" id="iCategory"
-                      placeholder="Metoda płatności" name="iCategory" />
+                    <input type="text" class="form-control border-secondary-subtle" placeholder="Metoda płatności"
+                      name="method" value="{{addedPaymentMethod.method}}" />
                   </div>
 
                   <input class="w-100 btn btn-primary btn-lg" type="submit" value="Dodaj" />
@@ -265,20 +263,31 @@ Ustawienia
 
           <div class="mb-3">
             <button class="w-100 btn btn-lg btn-primary" type="button" data-bs-toggle="collapse"
-              data-bs-target="#collapseChangePayment" aria-expanded="false" aria-controls="collapseChangePayment">
+              data-bs-target="#collapseChangePaymentMethod"
+              aria-expanded="{{changedPaymentMethod.errors is not empty ? " true" :"false" }}"
+              aria-controls="collapseChangePaymentMethod">
               Edytuj metodę płatności
             </button>
-            <div class="collapse" id="collapseChangePayment">
+            <div class="collapse {{changedPaymentMethod.errors is not empty ? " show" :"" }}"
+              id="collapseChangePaymentMethod">
               <div class="card card-body">
-                <form>
-                  <select class="form-select mb-3" aria-label="Default select example">
-                    <option selected>Wybierz metodę płatności</option>
-                    <option value="1">Wynagrodzenie</option>
-                    <option value="2">Odsetki bankowe</option>
-                    <option value="3">Sprzedaż na allegro</option>
-                    <option value="3">Inny</option>
-                  </select>
-
+                <form id="formChangePaymentMethod" method="post" action="/properties/change-payment-method">
+                  {% if changedPaymentMethod.errors is not empty %}
+                  <p>Błędy: </p>
+                  <ul>
+                    {% for error in changedPaymentMethod.errors %}
+                    <li><label>{{ error }}</label></li>
+                    {% endfor %}
+                  </ul>
+                  {% endif %}
+                  <div class="mb-3">
+                    <select class="form-select" aria-label="Wybierz metodę płatności" name="oldMethod">
+                      <option value="" selected>Wybierz metodę płatności</option>
+                      {% for payment_method in payment_methods %}
+                      <option value="{{payment_method.method_id}}">{{payment_method.method}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
                   <div class="mb-3 input-group">
                     <span class="input-group-text bg-body-secondary border-secondary-subtle"><svg
                         xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -286,8 +295,8 @@ Ustawienia
                         <path
                           d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
                       </svg></span>
-                    <input type="email" class="form-control border-secondary-subtle" id="iCategory"
-                      placeholder="Nowa nazwa płatności" name="iCategory" />
+                    <input type="text" class="form-control border-secondary-subtle" placeholder="Nowa nazwa płatności"
+                      name="method" />
                   </div>
 
                   <input class="w-100 btn btn-primary btn-lg" type="submit" value="Zmień" />
