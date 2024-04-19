@@ -116,12 +116,33 @@ function validatePaymentMethods() {
 }
 
 function validateUser() {
+    /**
+     * Validate change user data
+     */
+    $('#formChangeUserData').validate({
+        rules: {
+            name: 'required',
+            email: {
+                required: true,
+                email: true,
+                remote: {
+                    url: '/account/validate-email',
+                    data: {
+                        ignore_id: function () {
+                            return getUserID();
+                        }
+                    }
+                }
+            },
+            password: {
+                minlength: 6,
+                validPassword: true
+            },
+        },
+        messages: {
+            email: {
+                remote: 'Konto dla tego adresu email już istnieje.'
+            }
+        }
+    });
 }
-
-$(document).ready(function () {
-    validateIncomes();
-    validateExpenses();
-    validatePaymentMethods();
-    validateUser();
-});
-

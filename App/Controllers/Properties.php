@@ -130,6 +130,20 @@ class Properties extends Authenticated
     }
 
     /**
+     * Changes users data
+     * @return void
+     */
+    public function changeUserDataAction()
+    {
+        if ($this->user->change($_POST)) {
+            Flash::addMessage('Zmieniono dane użytkownika', 'success');
+            $this->redirect('/');
+        } else {
+            View::renderTemplate('Properties/properties.html', ['changedUserData' => $this->user]);
+        }
+    }
+
+    /**
      * Validates if income category is available (AJAX).
      * 
      * @return void
