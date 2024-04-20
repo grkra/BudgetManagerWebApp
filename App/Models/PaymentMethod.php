@@ -59,7 +59,7 @@ class PaymentMethod extends \Core\Model
      */
     public function change()
     {
-        $this->validate($this->oldMethod ?? null);
+        $this->validate();
 
         if (empty($this->errors)) {
             $sql = 'UPDATE payment_methods
@@ -77,23 +77,55 @@ class PaymentMethod extends \Core\Model
     }
 
     /**
+     * Deletes payment method.
+     * 
+     * @param string $oldMethod id of method being removed
+     * 
+     * @return boolean True if the payment method was deleted, false otherwise
+     */
+    public function delete($oldMethod)
+    {
+        $this->oldMethod = $oldMethod;
+
+        $this->validate();
+
+        if (empty($this->errors)) {
+            $sql = 'DELETE FROM payment_methods
+            WHERE method_id = :method_id
+            AND user_id = :user_id';
+            $db = static::getDB();
+            $stmt = $db->prepare($sql);
+            $stmt->bindValue(':method_id', $this->oldMethod, PDO::PARAM_INT);
+            $stmt->bindValue(':user_id', $this->user_id, PDO::PARAM_INT);
+            return $stmt->execute();
+        }
+        return false;
+    }
+
+    /**
      * Validate current property values, adding valiation error messages to the errors array property
      *
      * @return void
      */
     private function validate()
     {
-        if ($this->method == '') {
+        if (
+            isset($this->method) &&
+            $this->method == ''
+        ) {
             $this->errors[] = 'Nie wpisano nazwy metody.';
         }
-        if (static::methodExists($this->user_id, $this->method)) {
+        if (
+            isset($this->method) &&
+            static::methodExists($this->user_id, $this->method)
+        ) {
             $this->errors[] = 'Taka metoda już istnieje.';
         }
         if (
-            isset($this->oldMethod)
-            && $this->oldMethod == ''
+            isset($this->oldMethod) &&
+            $this->oldMethod == ''
         ) {
-            $this->errors[] = 'Nie wybrano metody płatności do zmiany.';
+            $this->errors[] = 'Nie wybrano metody płatności.';
         }
     }
 

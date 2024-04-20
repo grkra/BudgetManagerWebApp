@@ -7,18 +7,8 @@ Ustawienia
 {% block footer %}
 <script>function getUserID() { return '{{current_user.user_id}}'; }
 </script>
-
 <script src="/js/propertiesValidators.js"></script>
 <script src="/js/passwordValidator.js"></script>
-
-<script>
-  $(document).ready(function () {
-    validateIncomes();
-    validateExpenses();
-    validatePaymentMethods();
-    validateUser();
-  });
-</script>
 {% endblock %}
 
 {% block body %}
@@ -111,20 +101,33 @@ Ustawienia
 
           <div>
             <button class="w-100 btn btn-lg btn-primary" type="button" data-bs-toggle="collapse"
-              data-bs-target="#collapseDeleteIncome" aria-expanded="false" aria-controls="collapseDeleteIncome">
+              data-bs-target="#collapseDeleteIncomeCategory"
+              aria-expanded="{{deletedIncomeCategory.errors is not empty ? " true" :"false" }}"
+              aria-controls="collapseDeleteIncomeCategory">
               Usuń kategorię
             </button>
-            <div class="collapse" id="collapseDeleteIncome">
+            <div class="collapse {{deletedIncomeCategory.errors is not empty ? " show" :"" }}"
+              id="collapseDeleteIncomeCategory">
               <div class="card card-body">
-                <form>
-                  <select class="form-select mb-3" aria-label="Default select example">
-                    <option selected>Wybierz kategorię</option>
-                    <option value="1">Wynagrodzenie</option>
-                    <option value="2">Odsetki bankowe</option>
-                    <option value="3">Sprzedaż na allegro</option>
-                    <option value="3">Inny</option>
-                  </select>
-
+                <form id="formDeleteIncomeCategory" method="post" action="/properties/delete-income-category">
+                  {% if deletedIncomeCategory.errors is not empty %}
+                  <p>Błędy: </p>
+                  <ul>
+                    {% for error in deletedIncomeCategory.errors %}
+                    <li><label>{{ error }}</label></li>
+                    {% endfor %}
+                  </ul>
+                  {% endif %}
+                  <p class="text-primary">Usunięcie kategorii spowoduje usunięcie przypisanych do niej
+                    przychodów.</p>
+                  <div class="mb-3">
+                    <select class="form-select" aria-label="Wybierz kategorię" name="oldCategory">
+                      <option value="" selected>Wybierz kategorię</option>
+                      {% for income_category in income_categories %}
+                      <option value="{{income_category.category_id}}">{{income_category.category}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
                   <input class="w-100 btn btn-primary btn-lg" type="submit" value="Usuń" />
                 </form>
               </div>
@@ -216,20 +219,33 @@ Ustawienia
 
           <div>
             <button class="w-100 btn btn-lg btn-primary" type="button" data-bs-toggle="collapse"
-              data-bs-target="#collapseDeleteExpense" aria-expanded="false" aria-controls="collapseDeleteExpense">
+              data-bs-target="#collapseDeleteExpenseCategory"
+              aria-expanded="{{deletedExpenseCategory.errors is not empty ? " true" :"false" }}"
+              aria-controls="collapseDeleteExpenseCategory">
               Usuń kategorię
             </button>
-            <div class="collapse" id="collapseDeleteExpense">
+            <div class="collapse {{deletedExpenseCategory.errors is not empty ? " show" :"" }}"
+              id="collapseDeleteExpenseCategory">
               <div class="card card-body">
-                <form>
-                  <select class="form-select mb-3" aria-label="Default select example">
-                    <option selected>Wybierz kategorię</option>
-                    <option value="1">Wynagrodzenie</option>
-                    <option value="2">Odsetki bankowe</option>
-                    <option value="3">Sprzedaż na allegro</option>
-                    <option value="3">Inny</option>
-                  </select>
-
+                <form id="formDeleteExpenseCategory" method="post" action="/properties/delete-expense-category">
+                  {% if deletedExpenseCategory.errors is not empty %}
+                  <p>Błędy: </p>
+                  <ul>
+                    {% for error in deletedExpenseCategory.errors %}
+                    <li><label>{{ error }}</label></li>
+                    {% endfor %}
+                  </ul>
+                  {% endif %}
+                  <p class="text-primary">Usunięcie kategorii spowoduje usunięcie przypisanych do niej
+                    wydatków.</p>
+                  <div class="mb-3">
+                    <select class="form-select" aria-label="Wybierz kategorię" name="oldCategory">
+                      <option value="" selected>Wybierz kategorię</option>
+                      {% for payment_category in payment_categories %}
+                      <option value="{{payment_category.category_id}}">{{payment_category.category}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
                   <input class="w-100 btn btn-primary btn-lg" type="submit" value="Usuń" />
                 </form>
               </div>
@@ -320,20 +336,32 @@ Ustawienia
 
           <div>
             <button class="w-100 btn btn-lg btn-primary" type="button" data-bs-toggle="collapse"
-              data-bs-target="#collapseDeletePayment" aria-expanded="false" aria-controls="collapseDeletePayment">
+              data-bs-target="#collapseDeletePaymentMethod"
+              aria-expanded="{{deletedPaymentMethod.errors is not empty ? " true" :"false" }}"
+              aria-controls="collapseDeletePaymentMethod">
               Usuń metodę płatności
             </button>
-            <div class="collapse" id="collapseDeletePayment">
+            <div class="collapse {{deletedPaymentMethod.errors is not empty ? " show" :"" }}"
+              id="collapseDeletePaymentMethod">
               <div class="card card-body">
-                <form>
-                  <select class="form-select mb-3" aria-label="Default select example">
-                    <option selected>Wybierz metodę płatności</option>
-                    <option value="1">Wynagrodzenie</option>
-                    <option value="2">Odsetki bankowe</option>
-                    <option value="3">Sprzedaż na allegro</option>
-                    <option value="3">Inny</option>
-                  </select>
+                <form id="formDeletePaymentMethod" method="post" action="/properties/delete-payment-method">
 
+                  {% if deletedPaymentMethod.errors is not empty %}
+                  <p>Błędy: </p>
+                  <ul>
+                    {% for error in deletedPaymentMethod.errors %}
+                    <li><label>{{ error }}</label></li>
+                    {% endfor %}
+                  </ul>
+                  {% endif %}
+                  <div class="mb-3">
+                    <select class="form-select" aria-label="Wybierz metodę płatności" name="oldMethod">
+                      <option value="" selected>Wybierz metodę płatności</option>
+                      {% for payment_method in payment_methods %}
+                      <option value="{{payment_method.method_id}}">{{payment_method.method}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
                   <input class="w-100 btn btn-primary btn-lg" type="submit" value="Usuń" />
                 </form>
               </div>

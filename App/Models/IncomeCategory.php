@@ -82,23 +82,55 @@ class IncomeCategory extends \Core\Model
     }
 
     /**
+     * Deletes income category.
+     * 
+     * @param string $oldCategory id of category being removed
+     * 
+     * @return boolean True if the income category was deleted, false otherwise
+     */
+    public function delete($oldCategory)
+    {
+        $this->oldCategory = $oldCategory;
+
+        $this->validate();
+
+        if (empty($this->errors)) {
+            $sql = 'DELETE FROM income_categories
+            WHERE category_id = :category_id
+            AND user_id = :user_id';
+            $db = static::getDB();
+            $stmt = $db->prepare($sql);
+            $stmt->bindValue(':category_id', $this->oldCategory, PDO::PARAM_INT);
+            $stmt->bindValue(':user_id', $this->user_id, PDO::PARAM_INT);
+            return $stmt->execute();
+        }
+        return false;
+    }
+
+    /**
      * Validate current property values, adding valiation error messages to the errors array property
      *
      * @return void
      */
     private function validate()
     {
-        if ($this->category == '') {
+        if (
+            isset($this->category) &&
+            $this->category == ''
+        ) {
             $this->errors[] = 'Nie wpisano nazwy kategorii.';
         }
-        if (static::categoryExists($this->user_id, $this->category)) {
+        if (
+            isset($this->category) &&
+            static::categoryExists($this->user_id, $this->category)
+        ) {
             $this->errors[] = 'Taka kategoria już istnieje.';
         }
         if (
             isset($this->oldCategory)
             && $this->oldCategory == ''
         ) {
-            $this->errors[] = 'Nie wybrano kategorii do zmiany.';
+            $this->errors[] = 'Nie wybrano kategorii.';
         }
     }
 

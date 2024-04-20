@@ -72,7 +72,7 @@ const IncomeDataLabels = {
             const xDiagonalLineStart = outerRadius * Math.cos((startAngle + endAngle) / 2);
             const yDiagonalLineStart = outerRadius * Math.sin((startAngle + endAngle) / 2);
 
-            if (datapoint / incomesTotal < minPartDrawAllData) {
+            if (datapoint / maxTotal < minPartDrawAllData) {
                 const diagonalLineLengthModifier = 0.5 * smallValuesCounter - 0.3;
                 smallValuesCounter++
 
@@ -198,7 +198,7 @@ const ExpenseDataLabels = {
             const xDiagonalLineStart = outerRadius * Math.cos((startAngle + endAngle) / 2);
             const yDiagonalLineStart = outerRadius * Math.sin((startAngle + endAngle) / 2);
 
-            if (datapoint / expensesTotal < minPartDrawAllData) {
+            if (datapoint / maxTotal < minPartDrawAllData) {
                 const diagonalLineLengthModifier = 0.5 * smallValuesCounter - 0.3;
                 smallValuesCounter++
 

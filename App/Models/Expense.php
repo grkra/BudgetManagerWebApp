@@ -92,9 +92,9 @@ class Expense extends \Core\Model
     {
         $sql = 'SELECT expenses.expense_id, expenses.value, expenses.date, payment_categories.category, payment_methods.method, expenses.comment
         FROM expenses
-        INNER JOIN payment_categories
+        LEFT OUTER JOIN payment_categories
         ON expenses.category_id = payment_categories.category_id
-        INNER JOIN payment_methods
+        LEFT OUTER JOIN payment_methods
         ON expenses.method_id = payment_methods.method_id
         WHERE expenses.user_id = :user_id
         ORDER BY payment_categories.category, 
@@ -147,9 +147,9 @@ class Expense extends \Core\Model
     {
         $sql = 'SELECT expenses.expense_id, expenses.value, expenses.date, payment_categories.category, payment_methods.method, expenses.comment
         FROM expenses
-        INNER JOIN payment_categories
+        LEFT OUTER JOIN payment_categories
         ON expenses.category_id = payment_categories.category_id
-        INNER JOIN payment_methods
+        LEFT OUTER JOIN payment_methods
         ON expenses.method_id = payment_methods.method_id
         WHERE expenses.user_id = :user_id
         AND expenses.date BETWEEN :start_date AND :end_date

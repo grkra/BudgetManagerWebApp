@@ -185,9 +185,10 @@ Bilans
               <table class="table mb-0 border border-black">
                 <thead>
                   <tr>
-                    <th class="w-25" scope="col">Data</th>
-                    <th scope="col">Komentarz</th>
-                    <th class="w-25" scope="col">Wartość</th>
+                    <th class="col-2" scope="col">Data</th>
+                    <th class="col" scope="col">Komentarz</th>
+                    <th class="col-2" scope="col">Wartość</th>
+                    <th class="col-2" scope="col">Sposób płatności</th>
                   </tr>
                 </thead>
 
@@ -198,6 +199,7 @@ Bilans
                     <td>{{ expense.date }}</td>
                     <td>{{ expense.comment }}</td>
                     <td>{{ expense.value|number_format(2, ',', ' ') }}</td>
+                    <td>{{ expense.method }}</td>
                   </tr>
                   {% endif %}
                   {% endfor %}

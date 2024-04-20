@@ -66,6 +66,22 @@ class Properties extends Authenticated
     }
 
     /**
+     * Deletes existing income category
+     * @return void
+     */
+    public function deleteIncomeCategoryAction()
+    {
+        $deletedIncomeCategory = new IncomeCategory($this->user->user_id);
+
+        if ($deletedIncomeCategory->delete($_POST["oldCategory"])) {
+            Flash::addMessage('Usunięto kategorię przychodów', 'success');
+            $this->redirect('/');
+        } else {
+            View::renderTemplate('Properties/properties.html', ['deletedIncomeCategory' => $deletedIncomeCategory]);
+        }
+    }
+
+    /**
      * Creates new expense category
      * @return void
      */
@@ -98,6 +114,22 @@ class Properties extends Authenticated
     }
 
     /**
+     * Deletes existing expense category
+     * @return void
+     */
+    public function deleteExpenseCategoryAction()
+    {
+        $deletedExpenseCategory = new PaymentCategory($this->user->user_id);
+
+        if ($deletedExpenseCategory->delete($_POST["oldCategory"])) {
+            Flash::addMessage('Usunięto kategorię wydatków', 'success');
+            $this->redirect('/');
+        } else {
+            View::renderTemplate('Properties/properties.html', ['deletedExpenseCategory' => $deletedExpenseCategory]);
+        }
+    }
+
+    /**
      * Creates new payment method
      * @return void
      */
@@ -126,6 +158,22 @@ class Properties extends Authenticated
             $this->redirect('/');
         } else {
             View::renderTemplate('Properties/properties.html', ['changedPaymentMethod' => $changedPaymentMethod]);
+        }
+    }
+
+    /**
+     * Deletes existing payment method
+     * @return void
+     */
+    public function deletePaymentMethodAction()
+    {
+        $deletedPaymentMethod = new PaymentMethod($this->user->user_id);
+
+        if ($deletedPaymentMethod->delete($_POST["oldMethod"])) {
+            Flash::addMessage('Usunięto metodę płatności', 'success');
+            $this->redirect('/');
+        } else {
+            View::renderTemplate('Properties/properties.html', ['deletedPaymentMethod' => $deletedPaymentMethod]);
         }
     }
 

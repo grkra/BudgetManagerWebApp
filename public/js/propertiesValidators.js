@@ -35,6 +35,17 @@ function validateIncomes() {
             }
         }
     });
+
+    /**
+     * Validate delete income category
+     */
+    $('#formDeleteIncomeCategory').validate({
+        rules: {
+            oldCategory: {
+                required: true,
+            }
+        },
+    });
 }
 
 function validateExpenses() {
@@ -73,6 +84,17 @@ function validateExpenses() {
                 remote: 'Taka kategoria już istnieje.'
             }
         }
+    });
+
+    /**
+     * Validate delete expense category
+     */
+    $('#formDeleteExpenseCategory').validate({
+        rules: {
+            oldCategory: {
+                required: true,
+            }
+        },
     });
 }
 
@@ -113,6 +135,17 @@ function validatePaymentMethods() {
             }
         }
     });
+
+    /**
+     * Validate delete payment method
+     */
+    $('#formDeletePaymentMethod').validate({
+        rules: {
+            oldMethod: {
+                required: true,
+            }
+        },
+    });
 }
 
 function validateUser() {
@@ -146,3 +179,10 @@ function validateUser() {
         }
     });
 }
+
+$(document).ready(function () {
+    validateIncomes();
+    validateExpenses();
+    validatePaymentMethods();
+    validateUser();
+});
