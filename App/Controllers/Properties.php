@@ -7,6 +7,7 @@ use App\Models\PaymentCategory;
 use App\Models\PaymentMethod;
 use Core\View;
 use App\Auth;
+use App\Controllers\Login;
 
 /**
  * Properties controller
@@ -188,6 +189,20 @@ class Properties extends Authenticated
             $this->redirect('/');
         } else {
             View::renderTemplate('Properties/properties.html', ['changedUserData' => $this->user]);
+        }
+    }
+
+    /**
+     * Deletes user
+     * @return void
+     */
+    public function deleteUserAction()
+    {
+        if ($this->user->delete(isset($_POST["confirm"]))) {
+            Auth::logout();
+            $this->redirect('/login/show-deleted-user-message');
+        } else {
+            View::renderTemplate('Properties/properties.html', ['deletedUser' => $this->user]);
         }
     }
 

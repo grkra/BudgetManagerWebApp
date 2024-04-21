@@ -178,6 +178,22 @@ function validateUser() {
             }
         }
     });
+
+    /**
+     * Validate delete user
+     */
+    $('#formDeleteUser').validate({
+        rules: {
+            confirm: {
+                required: true,
+            }
+        },
+        messages: {
+            confirm: {
+                required: 'Wymagane potwierdzenie.'
+            }
+        }
+    });
 }
 
 $(document).ready(function () {

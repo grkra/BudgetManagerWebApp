@@ -108,6 +108,32 @@ class User extends \Core\Model
     }
 
     /**
+     * Deletes user from database     
+     * 
+     * @return boolean True if the user was deleted, false otherwise
+     */
+    public function delete($confirmation)
+    {
+        if (!$confirmation) {
+            $this->errors[] = 'Wymagane potwierdzenie.';
+        }
+
+        if (empty($this->errors)) {
+            $sql = 'DELETE FROM users
+            WHERE user_id = :user_id
+            AND name = :name
+            AND email = :email';
+            $db = static::getDB();
+            $stmt = $db->prepare($sql);
+            $stmt->bindValue(':user_id', $this->user_id, PDO::PARAM_INT);
+            $stmt->bindValue(':name', $this->name, PDO::PARAM_STR);
+            $stmt->bindValue(':email', $this->email, PDO::PARAM_STR);
+            return $stmt->execute();
+        }
+        return false;
+    }
+
+    /**
      * Validate current property values, adding valiation error messages to the errors array property
      * 
      * @return void

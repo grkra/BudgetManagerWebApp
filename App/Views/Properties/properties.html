@@ -345,7 +345,6 @@ Ustawienia
               id="collapseDeletePaymentMethod">
               <div class="card card-body">
                 <form id="formDeletePaymentMethod" method="post" action="/properties/delete-payment-method">
-
                   {% if deletedPaymentMethod.errors is not empty %}
                   <p>Błędy: </p>
                   <ul>
@@ -425,23 +424,33 @@ Ustawienia
 
           <div>
             <button class="w-100 btn btn-lg btn-primary" type="button" data-bs-toggle="collapse"
-              data-bs-target="#collapseDeleteUser" aria-expanded="false" aria-controls="collapseDeleteUser">
+              data-bs-target="#collapseDeleteUser" aria-expanded="{{deletedUser.errors is not empty ? " true" :"false"
+              }}" aria-controls="collapseDeleteUser">
               Usuń konto
             </button>
-            <div class="collapse" id="collapseDeleteUser">
+            <div class="collapse {{deletedUser.errors is not empty ? " show" :"" }}" id="collapseDeleteUser">
               <div class="card card-body">
-                <form>
+                <form id="formDeleteUser" method="post" action="/properties/delete-user">
+                  {% if deletedUser.errors is not empty %}
+                  <p>Błędy: </p>
+                  <ul>
+                    {% for error in deletedUser.errors %}
+                    <li><label>{{ error }}</label></li>
+                    {% endfor %}
+                  </ul>
+                  {% endif %}
                   <div class="mb-3">
-                    <div class="form-check">
-                      <input type="checkbox" class="form-check-input" id="dropdownCheck" />
-                      <label class="form-check-label" for="dropdownCheck">
-                        Czy napewno chcesz usunąć konto?
-                      </label>
-                    </div>
+                    <fieldset>
+                      <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="dropdownCheck" name="confirm" required />
+                        <label class="form-check-label" for="dropdownCheck">
+                          Czy napewno chcesz usunąć konto?
+                        </label>
+                        <label for="confirm" class="error">aaaWymagane potwierdzenie.</label>
+                      </div>
+                    </fieldset>
                   </div>
-                  <button type="submit" class="btn btn-primary">
-                    Usuń
-                  </button>
+                  <input class="w-100 btn btn-primary btn-lg" type="submit" value="Usuń" />
                 </form>
               </div>
             </div>
