@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Odzyskiwanie hasła
+{% endblock %}
+
+{% block body %}
+<main>
+    <div class="container col-xl-10 col-xxl-8 px-4 py-5">
+        <div class="justify-content-end align-items-center g-lg-5 py-5">
+            <div class="text-center">
+                <h1 class="display-4 fw-bold lh-1 text-body-emphasis mb-3" style="
+                font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman',
+                  serif;
+              ">
+                    Odzyskiwanie hasła
+                </h1>
+
+                <p class="fs-4">Link do resetowania hasła jest niepoprawny lub wygasł. Proszę <a href="/password/forgot"
+                        class="link">kliknąć tu</a> by spróbować ponownie.</p>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

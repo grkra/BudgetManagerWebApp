@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Odzyskiwanie hasła
+{% endblock %}
+
+{% block footer %}
+<script>
+    $(document).ready(function () {
+        /**
+         * Validate the form
+         */
+        $('#formPasswordReset').validate({
+            rules: {
+                email: {
+                    required: true,
+                    email: true,
+                },
+            },
+        });
+    });
+</script>
+{% endblock %}
+
+{% block body %}
+<main>
+    <div class="container col-xl-10 col-xxl-8 px-4 py-5">
+        <div class="col-md-10 mx-auto col-lg-5">
+            <div class="p-4 p-md-5 border rounded-3 bg-body">
+                <h1 class="m-0 pb-4 pb-md-5 lh-1">Zresetuj hasło</h1>
+
+                <form method="post" action="/password/request-reset" id="formPasswordReset">
+
+                    <div class="mb-3 input-group">
+                        <span class="input-group-text bg-body-secondary border-secondary-subtle">@</span>
+                        <input type="email" class="form-control border-secondary-subtle" placeholder="Adres email"
+                            name="email" required />
+                    </div>
+
+                    <input class="w-100 btn btn-primary btn-lg" type="submit" value="Zresetuj hasło" />
+                </form>
+                <hr class="my-4" />
+                <a href="/" class="w-100 btn btn-lg btn-outline-primary">
+                    Powrót
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+
+{% endblock %}

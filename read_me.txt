@@ -180,7 +180,9 @@ Create database with structure:
 	  `email` varchar(255) NOT NULL,
 	  `password_hash` varchar(255) NOT NULL,
 	  `activation_hash` varchar(64) DEFAULT NULL,
-	  `is_active` tinyint(1) NOT NULL DEFAULT 0
+	  `is_active` tinyint(1) NOT NULL DEFAULT 0,
+	  `password_reset_hash` varchar(64) DEFAULT NULL,
+	  `password_reset_expires_at` datetime DEFAULT NULL
 	) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 	ALTER TABLE `expenses`
