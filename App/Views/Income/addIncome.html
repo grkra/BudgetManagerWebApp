@@ -67,7 +67,7 @@ Dodaj przychód
               </svg>
             </span>
             <input type="number" class="form-control border-secondary-subtle" id="value" placeholder="123,45"
-              name="value" value="{{income.value}}" min=0.00 any />
+              name="value" value="{{income.value}}" min=0.00 any required />
           </div>
 
           <div class="mb-3 input-group">
@@ -81,7 +81,7 @@ Dodaj przychód
               </svg>
             </span>
             <input type="date" class="form-control border-secondary-subtle" id="date" name="date"
-              value="{{income.date}}" />
+              value="{{income.date}}" required />
           </div>
 
           <div class="form-control mb-3 border-secondary-subtle" id="categoryForm">
@@ -93,7 +93,7 @@ Dodaj przychód
               <div class="form-check">
                 <label class="form-check-label">
                   <input class="form-check-input" type="radio" name="category" value="{{income_category.category_id}}"
-                    {% if income.category==income_category.category_id %} checked {% endif %} />
+                    {% if income.category==income_category.category_id %} checked {% endif %} required />
                   {{income_category.category}}
                 </label>
               </div>

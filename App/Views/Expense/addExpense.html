@@ -73,7 +73,7 @@ Dodaj wydatek
               </svg>
             </span>
             <input type="number" class="form-control border-secondary-subtle" id="value" placeholder="123,45"
-              name="value" value="{{expense.value}}" min=0.00 any />
+              name="value" value="{{expense.value}}" min=0.00 any required />
           </div>
 
           <div class="mb-3 input-group">
@@ -87,7 +87,7 @@ Dodaj wydatek
               </svg>
             </span>
             <input type="date" class="form-control border-secondary-subtle" id="date" name="date"
-              value="{{expense.date}}" />
+              value="{{expense.date}}" required />
           </div>
 
           <div class="form-control mb-3 border-secondary-subtle">
@@ -99,7 +99,7 @@ Dodaj wydatek
               <div class="form-check">
                 <label class="form-check-label">
                   <input class="form-check-input" type="radio" name="method" value={{payment_method.method_id}} {% if
-                    expense.method==payment_method.method_id %} checked {% endif %} />
+                    expense.method==payment_method.method_id %} checked {% endif %} required />
                   {{payment_method.method}} </label>
               </div>
               {% endfor %}
@@ -116,7 +116,7 @@ Dodaj wydatek
               <div class="form-check">
                 <label class="form-check-label">
                   <input class="form-check-input" type="radio" name="category" value={{payment_category.category_id}} {%
-                    if expense.category==payment_category.category_id %} checked {% endif %} />
+                    if expense.category==payment_category.category_id %} checked {% endif %} required />
                   {{payment_category.category}} </label>
               </div>
               {% endfor %}

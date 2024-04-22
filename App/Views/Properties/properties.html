@@ -9,6 +9,7 @@ Ustawienia
 </script>
 <script src="/js/propertiesValidators.js"></script>
 <script src="/js/passwordValidator.js"></script>
+<script src="/js/showHidePassword.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -45,7 +46,7 @@ Ustawienia
                           d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
                       </svg></span>
                     <input type="text" class="form-control border-secondary-subtle" placeholder="Kategoria"
-                      name="category" value="{{addedIncomeCategory.category}}" />
+                      name="category" value="{{addedIncomeCategory.category}}" required />
                   </div>
 
                   <input class="w-100 btn btn-primary btn-lg" type="submit" value="Dodaj" />
@@ -74,7 +75,7 @@ Ustawienia
                   </ul>
                   {% endif %}
                   <div class="mb-3">
-                    <select class="form-select" aria-label="Wybierz kategorię" name="oldCategory">
+                    <select class="form-select" aria-label="Wybierz kategorię" name="oldCategory" required>
                       <option value="" selected>Wybierz kategorię</option>
                       {% for income_category in income_categories %}
                       <option value="{{income_category.category_id}}">{{income_category.category}}</option>
@@ -90,7 +91,7 @@ Ustawienia
                           d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
                       </svg></span>
                     <input type="text" class="form-control border-secondary-subtle" placeholder="Nowa nazwa kategorii"
-                      name="category" value="{{changedIncomeCategory.category}}" />
+                      name="category" value="{{changedIncomeCategory.category}}" required />
                   </div>
 
                   <input class="w-100 btn btn-primary btn-lg" type="submit" value="Zmień" />
@@ -121,7 +122,7 @@ Ustawienia
                   <p class="text-primary">Usunięcie kategorii spowoduje usunięcie przypisanych do niej
                     przychodów.</p>
                   <div class="mb-3">
-                    <select class="form-select" aria-label="Wybierz kategorię" name="oldCategory">
+                    <select class="form-select" aria-label="Wybierz kategorię" name="oldCategory" required>
                       <option value="" selected>Wybierz kategorię</option>
                       {% for income_category in income_categories %}
                       <option value="{{income_category.category_id}}">{{income_category.category}}</option>
@@ -164,7 +165,7 @@ Ustawienia
                           d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
                       </svg></span>
                     <input type="text" class="form-control border-secondary-subtle" placeholder="Kategoria"
-                      name="category" value="{{addedExpenseCategory.category}}" />
+                      name="category" value="{{addedExpenseCategory.category}}" required />
                   </div>
 
                   <input class="w-100 btn btn-primary btn-lg" type="submit" value="Dodaj" />
@@ -193,7 +194,7 @@ Ustawienia
                   </ul>
                   {% endif %}
                   <div class="mb-3">
-                    <select class="form-select" aria-label="Wybierz kategorię" name="oldCategory">
+                    <select class="form-select" aria-label="Wybierz kategorię" name="oldCategory" required>
                       <option value="" selected>Wybierz kategorię</option>
                       {% for payment_category in payment_categories %}
                       <option value="{{payment_category.category_id}}">{{payment_category.category}}</option>
@@ -208,7 +209,7 @@ Ustawienia
                           d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
                       </svg></span>
                     <input type="text" class="form-control border-secondary-subtle" placeholder="Nowa nazwa kategorii"
-                      name="category" value="{{changedExpenseCategory.category}}" />
+                      name="category" value="{{changedExpenseCategory.category}}" required />
                   </div>
 
                   <input class="w-100 btn btn-primary btn-lg" type="submit" value="Zmień" />
@@ -281,7 +282,7 @@ Ustawienia
                           d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
                       </svg></span>
                     <input type="text" class="form-control border-secondary-subtle" placeholder="Metoda płatności"
-                      name="method" value="{{addedPaymentMethod.method}}" />
+                      name="method" value="{{addedPaymentMethod.method}}" required />
                   </div>
 
                   <input class="w-100 btn btn-primary btn-lg" type="submit" value="Dodaj" />
@@ -310,7 +311,7 @@ Ustawienia
                   </ul>
                   {% endif %}
                   <div class="mb-3">
-                    <select class="form-select" aria-label="Wybierz metodę płatności" name="oldMethod">
+                    <select class="form-select" aria-label="Wybierz metodę płatności" name="oldMethod" required>
                       <option value="" selected>Wybierz metodę płatności</option>
                       {% for payment_method in payment_methods %}
                       <option value="{{payment_method.method_id}}">{{payment_method.method}}</option>
@@ -325,7 +326,7 @@ Ustawienia
                           d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
                       </svg></span>
                     <input type="text" class="form-control border-secondary-subtle" placeholder="Nowa nazwa płatności"
-                      name="method" />
+                      name="method" required />
                   </div>
 
                   <input class="w-100 btn btn-primary btn-lg" type="submit" value="Zmień" />
@@ -395,13 +396,13 @@ Ustawienia
                       </svg>
                     </span>
                     <input type="text" class="form-control border-secondary-subtle" placeholder="Imię" name="name"
-                      value="{{current_user.name}}" />
+                      value="{{current_user.name}}" required />
                   </div>
 
                   <div class="mb-3 input-group">
                     <span class="input-group-text bg-body-secondary border-secondary-subtle">@</span>
                     <input type="email" class="form-control border-secondary-subtle" placeholder="Adres email"
-                      name="email" value="{{current_user.email}}" />
+                      name="email" value="{{current_user.email}}" required />
                   </div>
 
                   <div class="mb-3 input-group">
@@ -413,7 +414,18 @@ Ustawienia
                       </svg>
                     </span>
                     <input type="password" class="form-control border-secondary-subtle" placeholder="Hasło"
-                      name="password" />
+                      name="password" style="z-index: 2;" id="inputPassword" />
+
+                    <button id="showPassword" type="button"
+                      class="btn btn-outline-secondary position-absolute top-0 end-0" style="z-index: 3;">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-eye-fill" viewBox="0 0 16 16">
+                        <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"></path>
+                        <path
+                          d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7">
+                        </path>
+                      </svg>
+                    </button>
                   </div>
 
                   <input class="w-100 btn btn-primary btn-lg" type="submit" value="Zmień dane" />
