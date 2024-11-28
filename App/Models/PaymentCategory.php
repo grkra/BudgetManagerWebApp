@@ -41,12 +41,30 @@ class PaymentCategory extends \Core\Model
         $this->validate();
 
         if (empty($this->errors)) {
-            $sql = 'INSERT INTO payment_categories (user_id, category)
-            VALUES (:user_id, :category)';
+            $sql = 'INSERT INTO payment_categories (user_id, category';
+
+            if (isset($this->setLimit)) {
+                $sql .= ', category_limit';
+            }
+
+            $sql .= ')
+            VALUES (:user_id, :category';
+
+            if (isset($this->setLimit)) {
+                $sql .= ', :category_limit';
+            }
+
+            $sql .= ')';
+
             $db = static::getDB();
             $stmt = $db->prepare($sql);
             $stmt->bindValue(':user_id', $this->user_id, PDO::PARAM_INT);
             $stmt->bindValue(':category', ucfirst($this->category), PDO::PARAM_STR);
+
+            if (isset($this->setLimit)) {
+                $stmt->bindValue(':category_limit', $this->limit ?? null, PDO::PARAM_STR);
+            }
+
             return $stmt->execute();
         }
         return false;
@@ -167,5 +185,20 @@ class PaymentCategory extends \Core\Model
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $stmt->execute();
         return $stmt->fetchAll();
+    }
+
+    public static function getLimit($user_id, $category)
+    {
+        $sql = 'SELECT category_limit FROM payment_categories
+        WHERE user_id = :user_id
+        AND category = :category';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->bindValue(':category', ucfirst($category), PDO::PARAM_STR);
+        $stmt->setFetchMode(PDO::FETCH_OBJ);
+        $stmt->execute();
+        return $stmt->fetch();
     }
 }

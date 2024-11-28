@@ -2,6 +2,7 @@
 namespace App\Controllers;
 
 use App\Flash;
+use App\Models\PaymentCategory;
 use \Core\View;
 use \App\Models\Expense;
 use App\Auth;
@@ -43,5 +44,13 @@ class AddExpense extends Authenticated
         } else {
             View::renderTemplate('Expense/addExpense.html', ['expense' => $expense]);
         }
+    }
+
+    public function limitAction()
+    {
+        $user_id = $this->user->user_id;
+        $category = $this->route_params['category'];
+
+        echo json_encode(PaymentCategory::getLimit($user_id, $category), JSON_UNESCAPED_UNICODE);
     }
 }

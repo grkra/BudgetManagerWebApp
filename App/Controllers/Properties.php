@@ -88,6 +88,18 @@ class Properties extends Authenticated
      */
     public function addExpenseCategoryAction()
     {
+        // category: 123
+        // setLimit: on
+        // limit: 123
+
+        /*
+        errors
+user_id
+category
+setLimit
+limit
+        */
+
         $addedPaymentCategory = new PaymentCategory($this->user->user_id, $_POST);
 
         if ($addedPaymentCategory->save()) {

@@ -125,7 +125,8 @@ Create database with structure:
 	CREATE TABLE `payment_categories` (
 	  `category_id` int(10) UNSIGNED NOT NULL,
 	  `category` varchar(50) NOT NULL,
-	  `user_id` int(10) UNSIGNED NOT NULL
+	  `user_id` int(10) UNSIGNED NOT NULL,
+	  `category_limit` double(10,2) DEFAULT NULL
 	) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 	CREATE TABLE `payment_categories_default` (

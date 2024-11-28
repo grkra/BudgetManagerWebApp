@@ -27,6 +27,8 @@ session_start();
 $router = new Core\Router();
 
 // Add the routes
+$router->add('api/limit/{category:[\wżźćńąśłęóŻŹĆŃĄŚŁĘÓ]+}', ['controller' => 'AddExpense', 'action' => 'limit']);
+
 $router->add('', ['controller' => 'Home', 'action' => 'new']);
 $router->add('add-income', ['controller' => 'AddIncome', 'action' => 'new']);
 $router->add('add-expense', ['controller' => 'AddExpense', 'action' => 'new']);
