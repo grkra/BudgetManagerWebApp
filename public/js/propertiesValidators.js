@@ -57,6 +57,10 @@ function validateExpenses() {
             category: {
                 required: true,
                 remote: '/properties/validate-expense-category'
+            },
+            limit: {
+                required: true,
+                min: 0.00
             }
         },
         messages: {
@@ -82,6 +86,18 @@ function validateExpenses() {
         messages: {
             category: {
                 remote: 'Taka kategoria już istnieje.'
+            }
+        }
+    });
+
+    /**
+    * Validate change limit of existing category (modal)
+    */
+    $('#formChangeExpenseCategoryModal').validate({
+        rules: {
+            limit: {
+                required: true,
+                min: 0.00
             }
         }
     });

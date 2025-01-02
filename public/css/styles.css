@@ -1,13 +1,13 @@
 label.error {
-    color: red;
-    display: block;
-    width: 100%;
-    padding-top: 0.5rem;
-  }
+  color: red;
+  display: block;
+  width: 100%;
+  padding-top: 0.5rem;
+}
 
 fieldset label.error {
-		display: none;
-	}
+  display: none;
+}
 
 svg.red {
   fill: red;
@@ -17,7 +17,8 @@ svg.red {
   cursor: pointer
 }
 
-tr.income:hover, tr.expense:hover {
+tr.income:hover,
+tr.expense:hover {
   font-weight: bold;
 }
 

@@ -8,6 +8,7 @@ use App\Models\PaymentMethod;
 use Core\View;
 use App\Auth;
 use App\Controllers\Login;
+use stdClass;
 
 /**
  * Properties controller
@@ -26,7 +27,7 @@ class Properties extends Authenticated
     }
 
     /**
-     * Show the balance page
+     * Show the properties page
      * @return void
      */
     public function newAction()
@@ -88,18 +89,6 @@ class Properties extends Authenticated
      */
     public function addExpenseCategoryAction()
     {
-        // category: 123
-        // setLimit: on
-        // limit: 123
-
-        /*
-        errors
-user_id
-category
-setLimit
-limit
-        */
-
         $addedPaymentCategory = new PaymentCategory($this->user->user_id, $_POST);
 
         if ($addedPaymentCategory->save()) {
@@ -255,5 +244,36 @@ limit
 
         header('Content-Type: application/json');
         echo json_encode($is_valid);
+    }
+
+    /**
+     * Sets limit for category 
+     * @return void
+     */
+    public function setLimitAction()
+    {
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        $changedPaymentCategory = new PaymentCategory($this->user->user_id, $data);
+
+        if ($changedPaymentCategory->setLimit()) {
+            // Flash::addMessage('Zmeniono limit', 'success');
+
+            http_response_code(201);
+            $response = [
+                'success' => true,
+                'message' => 'Limit changed'
+            ];
+
+            echo json_encode($response, JSON_UNESCAPED_UNICODE);
+        } else {
+            http_response_code(400);
+            $response = [
+                'success' => false,
+                'errors' => $changedPaymentCategory->errors
+            ];
+
+            echo json_encode($response, JSON_UNESCAPED_UNICODE);
+        }
     }
 }

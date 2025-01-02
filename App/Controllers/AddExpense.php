@@ -14,7 +14,6 @@ class AddExpense extends Authenticated
 {
     /**
      * Before filter - called before each action method
-     * 
      * @return void
      */
     protected function before()
@@ -34,6 +33,7 @@ class AddExpense extends Authenticated
 
     /**
      * Add new expense
+     * @return void
      */
     public function createAction()
     {
@@ -46,11 +46,15 @@ class AddExpense extends Authenticated
         }
     }
 
+    /**
+     * Returns limit for category passed as route parameter
+     * @return void
+     */
     public function limitAction()
     {
         $user_id = $this->user->user_id;
-        $category = $this->route_params['category'];
+        $category_id = $this->route_params['category'];
 
-        echo json_encode(PaymentCategory::getLimit($user_id, $category), JSON_UNESCAPED_UNICODE);
+        echo json_encode(PaymentCategory::getLimit($user_id, $category_id), JSON_UNESCAPED_UNICODE);
     }
 }

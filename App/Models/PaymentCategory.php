@@ -145,6 +145,18 @@ class PaymentCategory extends \Core\Model
         ) {
             $this->errors[] = 'Nie wybrano kategorii.';
         }
+        if (
+            isset($this->limit)
+            && $this->limit == ''
+        ) {
+            $this->errors[] = 'Nie wpisano limitu.';
+        }
+        if (
+            isset($this->limit)
+            && $this->limit < 0
+        ) {
+            $this->errors[] = 'Limit musi być większy od 0.';
+        }
     }
 
     /**
@@ -187,16 +199,40 @@ class PaymentCategory extends \Core\Model
         return $stmt->fetchAll();
     }
 
-    public static function getLimit($user_id, $category)
+    /**
+     * Sets new limit for the expense category with the current property values.
+     * 
+     * @return boolean True if the limit for the expense category was set, false otherwise
+     */
+    public function setLimit()
+    {
+        $this->validate();
+
+        if (empty($this->errors)) {
+            $sql = 'UPDATE payment_categories
+            SET category_limit = :category_limit
+            WHERE category_id = :category_id
+            AND user_id = :user_id';
+            $db = static::getDB();
+            $stmt = $db->prepare($sql);
+            $stmt->bindValue(':category_limit', $this->limit, PDO::PARAM_STR);
+            $stmt->bindValue(':category_id', $this->oldCategory, PDO::PARAM_INT);
+            $stmt->bindValue(':user_id', $this->user_id, PDO::PARAM_INT);
+            return $stmt->execute();
+        }
+        return false;
+    }
+
+    public static function getLimit($user_id, $category_id)
     {
         $sql = 'SELECT category_limit FROM payment_categories
         WHERE user_id = :user_id
-        AND category = :category';
+        AND category_id = :category_id';
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
-        $stmt->bindValue(':category', ucfirst($category), PDO::PARAM_STR);
+        $stmt->bindValue(':category_id', $category_id, PDO::PARAM_INT);
         $stmt->setFetchMode(PDO::FETCH_OBJ);
         $stmt->execute();
         return $stmt->fetch();
