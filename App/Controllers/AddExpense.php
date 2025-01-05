@@ -57,4 +57,17 @@ class AddExpense extends Authenticated
 
         echo json_encode(PaymentCategory::getLimit($user_id, $category_id), JSON_UNESCAPED_UNICODE);
     }
+
+    /**
+     * Returns expenses for category passed as route parameter
+     * @return void
+     */
+    public function expensesCategoryMonthAction()
+    {
+        $user_id = $this->user->user_id;
+        $category_id = $this->route_params['category'];
+        $date = $this->route_params['date'];
+
+        echo json_encode(Expense::getSumOfExpensesByCategoryIDAndDate($user_id, $category_id, $date), JSON_UNESCAPED_UNICODE);
+    }
 }
