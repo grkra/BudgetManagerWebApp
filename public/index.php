@@ -28,6 +28,7 @@ $router = new Core\Router();
 
 // Add the routes
 $router->add('api/limit/{category:[\d]+}', ['controller' => 'AddExpense', 'action' => 'limit']);
+$router->add('api/expenses/{category:[\d]+}/{date:[\d][\d][\d][\d]-[\d][\d]-[\d][\d]}', ['controller' => 'AddExpense', 'action' => 'expensesCategoryMonth']);
 $router->add('api/set-limit', ['controller' => 'Properties', 'action' => 'setLimit']);
 
 $router->add('', ['controller' => 'Home', 'action' => 'new']);

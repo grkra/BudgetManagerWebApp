@@ -46,7 +46,8 @@ Dodaj wydatek
   }
 </script>
 
-<script src="/js/addIncome.js"></script>
+<script src="/js/APIcalls.js"></script>
+<script src="/js/addExpense.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -126,7 +127,17 @@ Dodaj wydatek
             </fieldset>
           </div>
 
-          <div class="mb-3 input-group">
+          <div>
+            <p style="display: none" id="category-no-limit">Nie ustawiono limitu wydatków w wybranej kategorii</p>
+
+            <div style="display: none" class="form-control mb-3 border-secondary-subtle" id="expenses-balance">
+              <p id="category-limit">Limit wydatków: <span></span></p>
+              <p style="display: none" id="category-expenses">Wydatki: <span></span></p>
+              <p style="display: none" id="category-balance">Pozostały limit: <span></span></p>
+            </div>
+          </div>
+
+          <div class=" mb-3 input-group">
             <span class="input-group-text bg-body-secondary border-secondary-subtle">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-lg"
                 viewBox="0 0 16 16">

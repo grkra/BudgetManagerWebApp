@@ -167,7 +167,7 @@ class Expense extends \Core\Model
     }
 
     /**
-     * Find total value of expenses of each category by user ID
+     * Find total value of expenses of each category by user ID, start date and end date
      * 
      * @param int $user_id  ID of logged in user
      * @param string $start_date start date of wanted incomes
@@ -195,5 +195,26 @@ class Expense extends \Core\Model
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $stmt->execute();
         return $stmt->fetchAll();
+    }
+
+    public static function getSumOfExpensesByCategoryIDAndDate(
+        $user_id,
+        $category_id,
+        $date
+    ) {
+        $sql = 'SELECT IFNULL(sum(expenses.value), 0) AS "sum"
+        FROM expenses
+        WHERE expenses.user_id = :user_id
+        AND expenses.category_id = :category_id
+        AND date_format(expenses.date, "%Y-%m")=date_format(:date, "%Y-%m")';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->bindValue(':category_id', $category_id, PDO::PARAM_INT);
+        $stmt->bindValue(':date', $date, PDO::PARAM_STR);
+        $stmt->setFetchMode(PDO::FETCH_OBJ);
+        $stmt->execute();
+        return $stmt->fetch();
     }
 }
