@@ -68,40 +68,11 @@ $("#formChangeExpenseCategoryModal").on("submit", async function (event) {
     }
 })
 
-async function sendLimit(selectedCategory, newLimit) {
-    try {
-        const response = await fetch('/api/set-limit', {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ oldCategory: selectedCategory, limit: newLimit })
-        });
-
-        const data = await response.json();
-
-        return data;
-    } catch (error) {
-        console.log("Error: " + error);
-    }
-}
-
-async function getLimit(selectedCategory) {
-    try {
-        const response = await fetch(`/api/limit/${selectedCategory}`);
-        const data = await response.json();
-        const limit = data.category_limit;
-        return limit;
-    } catch (error) {
-        console.log("Error: " + error);
-    }
-}
-
 function updateLimitInformation(newLimit) {
     paymentCategoriesLimits[selectedPaymentCategoryIndex].limit = newLimit;
 
-    $(".category-limit").addClass("text-danger fw-bold");
+    $(".category-limit").addClass("text-primary fw-bold");
     showCategoryLimit(newLimit);
-    setTimeout(() => { $(".category-limit").removeClass("text-danger fw-bold") }, 5000);
+    setTimeout(() => { $(".category-limit").removeClass("text-primary fw-bold") }, 5000);
 }
 
