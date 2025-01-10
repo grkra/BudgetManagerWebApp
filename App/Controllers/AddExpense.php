@@ -59,7 +59,7 @@ class AddExpense extends Authenticated
     }
 
     /**
-     * Returns expenses for category passed as route parameter
+     * Returns expenses for category and date passed as route parameters
      * @return void
      */
     public function expensesCategoryMonthAction()

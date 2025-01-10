@@ -202,15 +202,7 @@ class Expense extends \Core\Model
         $category_id,
         $date
     ) {
-        /*
-        SELECT SUM(expenses.value) AS 'sum'
-        FROM expenses
-        WHERE expenses.user_id = 17 
-        AND expenses.category_id = 154 
-        AND date_format(expenses.date, '%Y-%m')=date_format('2024-11-25', '%Y-%m');
-        */
-
-        $sql = 'SELECT sum(expenses.value) AS "sum"
+        $sql = 'SELECT IFNULL(sum(expenses.value), 0) AS "sum"
         FROM expenses
         WHERE expenses.user_id = :user_id
         AND expenses.category_id = :category_id
