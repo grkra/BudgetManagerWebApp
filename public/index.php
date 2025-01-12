@@ -26,10 +26,26 @@ session_start();
  */
 $router = new Core\Router();
 
-// Add the routes
+/** Add routs */
+/**
+ * API endpoint to get limit of specified expense category
+ */
 $router->add('api/limit/{category:[\d]+}', ['controller' => 'AddExpense', 'action' => 'limit']);
+
+/**
+ * API endpoint to get sum of expenses for specified expense category and date
+ */
 $router->add('api/expenses/{category:[\d]+}/{date:[\d][\d][\d][\d]-[\d][\d]-[\d][\d]}', ['controller' => 'AddExpense', 'action' => 'expensesCategoryMonth']);
+
+/**
+ * API endpoint to set expense category limit
+ */
 $router->add('api/set-limit', ['controller' => 'Properties', 'action' => 'setLimit']);
+
+/**
+ * API endpoint to delete expense category limit
+ */
+$router->add('api/delete-limit', ['controller' => 'Properties', 'action' => 'deleteLimit']);
 
 $router->add('', ['controller' => 'Home', 'action' => 'new']);
 $router->add('add-income', ['controller' => 'AddIncome', 'action' => 'new']);

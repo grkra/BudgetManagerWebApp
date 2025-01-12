@@ -223,6 +223,12 @@ class PaymentCategory extends \Core\Model
         return false;
     }
 
+    /**
+     * Returns limit of category
+     * @param $user_id
+     * @param $category_id
+     * @return mixed Category limit if set in database, null if there was no limit
+     */
     public static function getLimit($user_id, $category_id)
     {
         $sql = 'SELECT category_limit FROM payment_categories
@@ -236,5 +242,33 @@ class PaymentCategory extends \Core\Model
         $stmt->setFetchMode(PDO::FETCH_OBJ);
         $stmt->execute();
         return $stmt->fetch();
+    }
+
+    /**
+     * Deletes limit from category
+     * @return boolean True if the limit for the expense category was deleted, false otherwise
+     */
+    public function deleteLimit()
+    {
+        $this->validate();
+
+        if (empty($this->errors)) {
+            $sql = 'UPDATE payment_categories
+            SET category_limit = NULL
+            WHERE category_id = :category_id
+            AND user_id = :user_id';
+            $db = static::getDB();
+            $stmt = $db->prepare($sql);
+            $stmt->bindValue(':category_id', $this->oldCategory, PDO::PARAM_INT);
+            $stmt->bindValue(':user_id', $this->user_id, PDO::PARAM_INT);
+            if ($stmt->execute()) {
+                if ($stmt->rowCount() == 0) {
+                    $this->errors[] = 'Wybrana kategoria jest niewłaściwa.';
+                } else {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
