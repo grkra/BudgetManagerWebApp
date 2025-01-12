@@ -247,7 +247,7 @@ class Properties extends Authenticated
     }
 
     /**
-     * Sets limit for category 
+     * Sets limit for payment category 
      * @return void
      */
     public function setLimitAction()
@@ -257,12 +257,40 @@ class Properties extends Authenticated
         $changedPaymentCategory = new PaymentCategory($this->user->user_id, $data);
 
         if ($changedPaymentCategory->setLimit()) {
-            // Flash::addMessage('Zmeniono limit', 'success');
-
             http_response_code(201);
             $response = [
                 'success' => true,
                 'message' => 'Limit changed'
+            ];
+
+            echo json_encode($response, JSON_UNESCAPED_UNICODE);
+        } else {
+            http_response_code(400);
+            $response = [
+                'success' => false,
+                'errors' => $changedPaymentCategory->errors
+            ];
+
+            echo json_encode($response, JSON_UNESCAPED_UNICODE);
+        }
+    }
+
+    /**
+     * Deletes limit for payment category 
+     * @return void
+     */
+    public function deleteLimitAction()
+    {
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        $changedPaymentCategory = new PaymentCategory($this->user->user_id, $data);
+
+        if ($changedPaymentCategory->deleteLimit()) {
+            http_response_code(201);
+            $response = [
+                'data' => $changedPaymentCategory->deleteLimit(),
+                'success' => true,
+                'message' => 'Limit deleted'
             ];
 
             echo json_encode($response, JSON_UNESCAPED_UNICODE);

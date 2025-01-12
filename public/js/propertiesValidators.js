@@ -97,7 +97,7 @@ function validateExpenses() {
         rules: {
             limit: {
                 required: true,
-                min: 0.00
+                min: 0.01
             }
         }
     });

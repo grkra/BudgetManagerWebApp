@@ -37,3 +37,21 @@ async function getExpenses(selectedCategory, selectedDate) {
         console.log("Error: " + error);
     }
 }
+
+async function deleteLimit(selectedCategory) {
+    try {
+        const response = await fetch('/api/delete-limit', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ oldCategory: selectedCategory })
+        });
+
+        const data = await response.json();
+
+        return data;
+    } catch (error) {
+        console.log("Error: " + error);
+    }
+}
